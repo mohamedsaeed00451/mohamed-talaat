@@ -51,22 +51,30 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="loading font-sans antialiased text-gray-800 bg-[#fbfcfd] flex h-screen selection:bg-primary selection:text-white">
+<body class="loading font-sans antialiased text-gray-800 bg-[#fbfcfd] selection:bg-primary selection:text-white overflow-hidden">
 
-@include('admin.layouts.loader')
+<div class="flex h-screen w-full relative z-0">
 
-@include('admin.layouts.sidebar')
+    @include('admin.layouts.loader')
 
-<div class="flex-1 flex flex-col relative overflow-hidden bg-gradient-to-br from-[#fbfcfd] to-[#f4f7fe]">
+    @include('admin.layouts.sidebar')
 
-    @include('admin.layouts.header')
+    <div class="flex-1 flex flex-col relative overflow-hidden bg-gradient-to-br from-[#fbfcfd] to-[#f4f7fe]">
 
-    <main class="flex-1 overflow-x-hidden overflow-y-auto px-10 pb-10 custom-scrollbar">
-        @yield('content')
-    </main>
+        @include('admin.layouts.header')
+
+        <main class="flex-1 overflow-x-hidden overflow-y-auto px-10 pb-10 custom-scrollbar">
+            @yield('content')
+        </main>
+
+    </div>
+
 </div>
+
+@include('admin.layouts.alerts')
 
 @include('admin.layouts.scripts')
 
 </body>
+</html>
 </html>
