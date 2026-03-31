@@ -7,14 +7,14 @@
 
 @theme {
 
-    --color-primary: #1e40af;
-    --color-primary-hover: #1e3a8a;
-    --color-primary-light: #eff6ff;
+    --color-primary: #000000;
+    --color-primary-hover: #1a1a1a;
+    --color-primary-light: #f3f4f6;
 
-    --color-secondary: #1e293b;
+    --color-secondary: #1f2937;
 
-    --color-accent-1: #2563eb;
-    --color-accent-2: #4f46e5;
+    --color-accent-1: #333333;
+    --color-accent-2: #4b5563;
 
     /* ------------------------------------------- */
 

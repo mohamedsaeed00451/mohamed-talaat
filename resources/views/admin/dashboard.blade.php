@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
 
+@section('meta_description', 'لوحة التحكم الخاصة بموقع دكتور محمد طلعت.')
+
 @section('title', 'نـظـرة عـامـة')
 
 @section('content')

@@ -1,6 +1,12 @@
 @extends('admin.layouts.app')
 
+@section('meta_description', 'صفحة إعدادات الموقع الخاص بالدكتور محمد طلعت.')
+
 @section('title', 'إعدادات النظام')
+
+@section('style')
+
+@endsection
 
 @section('content')
     <div x-data="{ tab: 'general' }" class="max-w-6xl mx-auto pb-20">
@@ -266,6 +272,47 @@
                             </div>
                         </div>
                     </div>
+                    <div class="space-y-4 mt-8 pt-8 border-t border-gray-100"
+                         x-data="{
+                                emails: {{ isset($settings['emails']) && is_array($settings['emails']) ? json_encode($settings['emails']) : "['']" }}
+                             }">
+                        <div class="flex items-center justify-between mb-4">
+                            <label class="text-[12px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></span>
+                                البريد الإلكتروني (Emails)
+                            </label>
+
+                            <button type="button" @click="emails.push('')"
+                                    class="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl font-bold text-xs transition-colors cursor-pointer">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                إضافة إيميل
+                            </button>
+                        </div>
+
+                        <template x-for="(email, index) in emails" :key="index">
+                            <div class="flex items-center gap-3 group/input animate-fade-in">
+                                <div class="relative flex-1">
+                                    <div class="absolute inset-y-0 right-0 pr-5 flex items-center pointer-events-none transition-transform group-focus-within/input:scale-110">
+                                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <input type="email" name="emails[]" x-model="emails[index]"
+                                           placeholder="example@domain.com" dir="ltr" required
+                                           class="w-full pr-14 pl-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/20 transition-all font-bold text-gray-800 text-sm shadow-inner">
+                                </div>
+
+                                <button type="button" x-show="emails.length > 1" @click="emails.splice(index, 1)"
+                                        class="p-4 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-2xl transition-all cursor-pointer shadow-sm">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
                 </div>
 
                 <div class="bg-white rounded-[3rem] p-10 md:p-12 shadow-sm border border-gray-50">
@@ -285,6 +332,7 @@
                                 'twitter' => ['color' => '#1DA1F2', 'icon' => 'M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.84 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z'],
                                 'instagram' => ['color' => '#E4405F', 'icon' => 'M12 0C8.74 0 8.333.015 7.053.072 3.908.214 2.152 1.944 2.01 5.088.953 6.368.016 6.776.016 12s.014 5.632.072 6.912c.142 3.144 1.884 4.874 5.03 5.017C6.368 23.986 6.776 24 12 24s5.632-.014 6.912-.072c3.144-.142 4.874-1.884 5.017-5.03.058-1.28.072-1.688.072-6.912s-.014-5.632-.072-6.912C23.858 1.958 22.116.228 18.97.085 17.69.028 17.282 0 12 0zm0 2.16c3.203 0 3.58.016 4.85.074 2.353.108 3.535 1.282 3.642 3.64.058 1.27.074 1.647.074 4.85s-.016 3.58-.074 4.85c-.107 2.358-1.284 3.54-3.642 3.642-1.27.058-1.647.074-4.85.074s-3.58-.016-4.85-.074c-2.36-.102-3.54-1.284-3.642-3.642-.058-1.27-.074-1.647-.074-4.85s.016-3.58.074-4.85c.108-2.353 1.282-3.54 3.64-3.642 1.27-.058 1.647-.074 4.85-.074zm0 3.678c-3.413 0-6.182 2.769-6.182 6.182S8.587 18.2 12 18.2s6.182-2.769 6.182-6.182S15.413 5.838 12 5.838zm0 10.204c-2.22 0-4.022-1.802-4.022-4.022s1.802-4.022 4.022-4.022 4.022 1.802 4.022 4.022-1.802 4.022-4.022 4.022zm6.437-11.23a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z'],
                                 'linkedin' => ['color' => '#0077B5', 'icon' => 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0z'],
+                                'youtube' => ['color' => '#FF0000', 'icon' => 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z'],
                             ];
                         @endphp
                         @foreach($socials as $key => $info)
@@ -410,11 +458,36 @@
                     <h4 class="text-2xl font-black">هل انتهيت من التعديلات؟</h4>
                     <p class="text-gray-400 text-sm mt-1">سيتم حفظ كافة البيانات وتحديثها في الموقع فوراً.</p>
                 </div>
-                <button type="submit"
-                        class="cursor-pointer relative z-10 w-full md:w-auto px-20 py-5 bg-white text-secondary rounded-[1.5rem] shadow-2xl font-black text-xl hover:scale-105 transition-all duration-500">
-                    حفظ الإعدادات الآن
+                <button type="submit" id="save-submit-btn"
+                        class="cursor-pointer flex items-center justify-center gap-3 relative z-10 w-full md:w-auto px-20 py-5 bg-white text-secondary rounded-[1.5rem] shadow-2xl font-black text-xl hover:scale-105 transition-all duration-500 disabled:opacity-70 disabled:cursor-not-allowed">
+
+                    <span id="save-btn-text">حفـظ التـعديــلات الان</span>
+
+                    <svg id="save-btn-loader" class="hidden w-6 h-6 animate-spin text-secondary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                 </button>
             </div>
         </form>
     </div>
+@endsection
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const saveBtn = document.getElementById('save-submit-btn');
+            const btnText = document.getElementById('save-btn-text');
+            const btnLoader = document.getElementById('save-btn-loader');
+            const form = saveBtn.closest('form');
+
+            if (form) {
+                form.addEventListener('submit', function () {
+                    saveBtn.disabled = true;
+                    btnText.innerText = "جاري الحفظ...";
+                    btnLoader.classList.remove('hidden');
+                    saveBtn.classList.remove('hover:scale-105');
+                });
+            }
+        });
+    </script>
 @endsection

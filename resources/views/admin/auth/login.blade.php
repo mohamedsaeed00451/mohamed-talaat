@@ -1,14 +1,35 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول - لوحة التحكم</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>د. محمد طلعت | تسجيل الدخول للوحة التحكم</title>
+    <meta name="description" content="لوحة التحكم الخاصة بإدارة محتوى ومقالات الدكتور محمد طلعت، الإعلامي والكاتب.">
+    <meta name="keywords" content="د. محمد طلعت, إعلامي, مقالات, لوحة تحكم, تسجيل الدخول, إدارة الموقع">
+    <meta name="author" content="د. محمد طلعت">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#000000"> <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="د. محمد طلعت | لوحة التحكم">
+    <meta property="og:description" content="تسجيل الدخول لإدارة محتوى ومقالات موقع الدكتور محمد طلعت.">
+    <meta property="og:image" content="{{ asset(get_setting('logo') ?? 'login-bg.png') }}">
+    <meta property="og:site_name" content="موقع د. محمد طلعت">
+    <meta property="og:locale" content="ar_AR">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="د. محمد طلعت | لوحة التحكم">
+    <meta name="twitter:description" content="تسجيل الدخول لإدارة محتوى ومقالات موقع الدكتور محمد طلعت.">
+    <meta name="twitter:image" content="{{ asset(get_setting('logo') ?? 'login-bg.png') }}">
+    @if(get_setting('favicon'))
+        <link rel="icon" href="{{ asset(get_setting('favicon')) }}" type="image/x-icon"/>
+        <link rel="apple-touch-icon" href="{{ asset(get_setting('favicon')) }}">
+    @endif
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -75,7 +96,8 @@
                     مــرحبــاً بعـودتــك!
                 </h1>
             </div>
-            <p class="text-gray-500 text-base lg:text-lg font-semibold px-4 lg:px-0">أدخــل بيــانــات الاعتمــاد للـوصــول للــوحــة
+            <p class="text-gray-500 text-base lg:text-lg font-semibold px-4 lg:px-0">أدخــل بيــانــات الاعتمــاد
+                للـوصــول للــوحــة
                 التحكم.</p>
         </div>
 
@@ -86,7 +108,7 @@
                     <p class="font-bold mb-1 text-sm">تـنبيـه الـأمــن!</p>
                     <p class="text-sm font-semibold">
                         لقـد تجــاوزت المحــاولات. يــرجــى الانتظــار <span id="countdown-timer"
-                                                                  class="font-black text-lg tracking-widest">{{ $errors->first('throttle_seconds') }}</span>
+                                                                             class="font-black text-lg tracking-widest">{{ $errors->first('throttle_seconds') }}</span>
                         ثــانيـة.
                     </p>
                 </div>
@@ -145,7 +167,8 @@
                 <input type="checkbox" id="remember" name="remember"
                        class="w-4 h-4 lg:w-5 lg:h-5 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-4 focus:ring-opacity-20 cursor-pointer transition-all">
                 <label for="remember"
-                       class="mr-3 text-xs lg:text-sm font-bold text-gray-600 cursor-pointer select-none">تــذكـر بيـانـات
+                       class="mr-3 text-xs lg:text-sm font-bold text-gray-600 cursor-pointer select-none">تــذكـر
+                    بيـانـات
                     الـدخـول</label>
             </div>
 
@@ -154,14 +177,20 @@
 
                 <span id="btn-text" class="relative z-10 text-lg lg:text-xl tracking-wide">تسـجيـل الـدخـول</span>
 
-                <div class="relative z-10 flex items-center justify-center p-1.5 lg:p-2 bg-white/20 rounded-lg transform transition-all duration-300">
-                    <svg id="arrow-icon" class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                <div
+                    class="relative z-10 flex items-center justify-center p-1.5 lg:p-2 bg-white/20 rounded-lg transform transition-all duration-300">
+                    <svg id="arrow-icon" class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor"
+                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                              d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
 
-                    <svg id="loader-icon" class="hidden w-5 h-5 lg:w-6 lg:h-6 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg id="loader-icon" class="hidden w-5 h-5 lg:w-6 lg:h-6 animate-spin text-white"
+                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                 </div>
             </button>
@@ -170,30 +199,28 @@
 </div>
 
 <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-secondary items-center justify-center">
-    <div class="absolute inset-0 bg-gradient-to-br from-primary/95 to-secondary/95 z-10"></div>
+    <img src="{{ asset('login-bg.png') }}"
+         alt="الدكتور محمد طلعت"
+         class="absolute inset-0 w-full h-full object-cover z-0">
 
-    <div
-        class="absolute top-10 right-10 w-96 h-96 rounded-full bg-accent-1 opacity-30 blur-3xl mix-blend-screen animate-pulse"
-        style="animation-duration: 4s;"></div>
-    <div
-        class="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-accent-2 opacity-40 blur-3xl mix-blend-screen animate-float"
-        style="animation-duration: 6s;"></div>
+    <div class="absolute inset-0 bg-black/60 z-10"></div>
 
     <div class="relative z-20 text-center px-12 animate-float" style="animation-duration: 5s;">
-        <div
-            class="inline-block p-6 rounded-3xl bg-white/10 backdrop-blur-lg border border-white/30 shadow-[0_20px_50px_rgba(0,0,0,0.2)] mb-10 transform hover:scale-105 transition-transform duration-500 cursor-default">
-            <svg class="w-20 h-20 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-        </div>
-        <h2 class="text-5xl font-black text-white mb-6 leading-tight drop-shadow-lg">إدارة النظام<br>باحترافية وسهولة
+
+        <h2 class="text-5xl font-extrabold text-white mb-5 leading-tight drop-shadow-lg Cairo">
+            د. محمد طلعت
         </h2>
-        <p class="text-xl text-primary-light max-w-md mx-auto leading-relaxed font-semibold">
-            منصة متكاملة تمنحك التحكم الكامل في كل أجزاء مشروعك مع أداء استثنائي وتجربة مستخدم لا مثيل لها.
+
+        <p class="text-2xl text-white/90 font-medium max-w-lg mx-auto leading-relaxed Cairo drop-shadow">
+            إعلامي وكاتب مقالات
+        </p>
+
+        <p class="text-lg text-white/70 mt-6 max-w-sm mx-auto font-Cairo">
+            مرحباً بك في لوحة التحكم الخاصة بإدارة المحتوى والمقالات.
         </p>
     </div>
 </div>
+
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -211,11 +238,11 @@
             loginBtn.classList.add('opacity-60', 'grayscale');
             loginBtn.classList.remove('cursor-pointer', 'hover:-translate-y-1');
 
-            if(btnText) btnText.innerText = "الدخول محظور مؤقتاً";
+            if (btnText) btnText.innerText = "الدخول محظور مؤقتاً";
 
             const interval = setInterval(function () {
                 seconds--;
-                if(timerDisplay) timerDisplay.innerText = seconds;
+                if (timerDisplay) timerDisplay.innerText = seconds;
 
                 if (seconds <= 0) {
                     clearInterval(interval);
@@ -224,9 +251,9 @@
                     loginBtn.classList.remove('opacity-60', 'grayscale');
                     loginBtn.classList.add('cursor-pointer', 'hover:-translate-y-1');
 
-                    if(btnText) btnText.innerText = "تسـجيـل الـدخـول";
+                    if (btnText) btnText.innerText = "تسـجيـل الـدخـول";
 
-                    if(throttleMessage) {
+                    if (throttleMessage) {
                         throttleMessage.style.transition = "opacity 0.5s";
                         throttleMessage.style.opacity = "0";
                         setTimeout(() => throttleMessage.remove(), 500);
@@ -246,7 +273,7 @@
         const timerDisplay = document.getElementById('countdown-timer');
         const throttleMessage = document.getElementById('throttle-message');
 
-        loginForm.addEventListener('submit', function() {
+        loginForm.addEventListener('submit', function () {
             loginBtn.disabled = true;
             loginBtn.classList.add('opacity-80', 'cursor-not-allowed');
             loginBtn.style.pointerEvents = 'none';
@@ -263,22 +290,22 @@
             loginBtn.disabled = true;
             loginBtn.style.pointerEvents = 'none';
             loginBtn.classList.add('opacity-60', 'grayscale');
-            if(btnText) btnText.innerText = "الدخول محظور مؤقتاً";
+            if (btnText) btnText.innerText = "الدخول محظور مؤقتاً";
             arrowIcon.classList.add('hidden');
 
             const interval = setInterval(function () {
                 seconds--;
-                if(timerDisplay) timerDisplay.innerText = seconds;
+                if (timerDisplay) timerDisplay.innerText = seconds;
 
                 if (seconds <= 0) {
                     clearInterval(interval);
                     loginBtn.disabled = false;
                     loginBtn.style.pointerEvents = 'auto';
                     loginBtn.classList.remove('opacity-60', 'grayscale');
-                    if(btnText) btnText.innerText = "تسجيل الدخول";
+                    if (btnText) btnText.innerText = "تسجيل الدخول";
                     arrowIcon.classList.remove('hidden');
 
-                    if(throttleMessage) {
+                    if (throttleMessage) {
                         throttleMessage.style.transition = "opacity 0.5s";
                         throttleMessage.style.opacity = "0";
                         setTimeout(() => throttleMessage.remove(), 500);

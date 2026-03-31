@@ -7,22 +7,29 @@
 
         <div class="flex items-center gap-4 group cursor-pointer relative z-10 w-full">
             <div
-                class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary via-accent-1 to-accent-2 flex items-center justify-center shadow-[0_10px_30px_rgba(30,64,175,0.4)] group-hover:scale-105 group-hover:rotate-3 transition-all duration-500 relative overflow-hidden border border-white/10">
-                <div class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                <svg class="w-8 h-8 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.6)] animate-float relative z-10" fill="none"
+                class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+            @if(get_setting('favicon'))
+                <img src="{{ asset(get_setting('favicon')) }}"
+                     alt="Favicon"
+                     class="w-14 h-14 object-contain animate-float relative z-10">
+            @else
+                <svg class="w-8 h-8 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.6)] animate-float relative z-10"
+                     fill="none"
                      stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                           d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
-            </div>
+            @endif
             <div class="flex flex-col w-44">
                 <h2 class="text-xl font-black tracking-tight uppercase leading-none truncate text-transparent bg-clip-text bg-gradient-to-l from-white to-gray-300">
                     {{ Auth::user()->name ?? 'Admin' }}
                 </h2>
                 <div class="flex items-center gap-2 mt-1.5">
                     <span class="relative flex h-2 w-2">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500 shadow-[0_0_5px_#22c55e]"></span>
+                      <span
+                          class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span
+                          class="relative inline-flex rounded-full h-2 w-2 bg-green-500 shadow-[0_0_5px_#22c55e]"></span>
                     </span>
                     <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">متصــل الـآن</span>
                 </div>
@@ -31,7 +38,8 @@
     </div>
 
     <nav class="flex-1 overflow-y-auto py-8 px-5 space-y-2 custom-scrollbar relative z-10">
-        <p class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] px-3 mb-6 opacity-70">القــائــمة الـرئيســية</p>
+        <p class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] px-3 mb-6 opacity-70">القــائــمة
+            الـرئيســية</p>
 
         @php $isActive = request()->routeIs('admin.dashboard'); @endphp
         <div class="relative group">
@@ -59,7 +67,8 @@
         </div>
 
         <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent my-6"></div>
-        <p class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] px-3 mb-6 opacity-70">إدارة المحتوى</p>
+        <p class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] px-3 mb-6 opacity-70">إدارة
+            المحتوى</p>
 
         @php $isActive = request()->routeIs('products.*'); @endphp
         <div class="relative group">
@@ -139,32 +148,4 @@
         </div>
     </nav>
 
-    <div class="p-5 relative z-10">
-        <div
-            class="bg-white/5 rounded-3xl p-4 border border-white/10 backdrop-blur-2xl relative overflow-hidden group shadow-xl hover:shadow-[0_10px_40px_rgba(0,0,0,0.5)] hover:bg-white/10 transition-all duration-500 cursor-pointer">
-            <div
-                class="absolute -bottom-10 -left-10 w-32 h-32 bg-primary opacity-20 blur-3xl group-hover:opacity-40 group-hover:scale-125 transition-all duration-700"></div>
-
-            <div class="flex items-center gap-3 relative z-10">
-                <div class="relative flex-shrink-0">
-                    <div
-                        class="absolute inset-0 bg-primary blur-md opacity-40 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-white to-gray-300 p-[2px] relative z-10">
-                        <div
-                            class="w-full h-full rounded-full bg-secondary flex items-center justify-center text-white font-black text-xl shadow-inner">
-                            {{ mb_substr(Auth::user()->name ?? 'A', 0, 1) }}
-                        </div>
-                    </div>
-                </div>
-                <div class="flex flex-col flex-1 min-w-0">
-                    <h4 class="text-sm font-black text-white leading-tight mb-0.5 truncate">{{ Auth::user()->name ?? 'المدير العام' }}</h4>
-                    <span
-                        class="text-[10px] text-gray-400 font-bold uppercase tracking-wider group-hover:text-primary-light transition-colors">مـديـر الـنظام</span>
-                </div>
-                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 text-gray-400 group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </div>
-            </div>
-        </div>
-    </div>
 </aside>
