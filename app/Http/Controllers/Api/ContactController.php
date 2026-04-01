@@ -34,7 +34,7 @@ class ContactController extends Controller
             'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
         ]);
 
-        $data = $request->except('attachment');
+        $data = $request->except('attachment', 'extra_key');
 
         if ($request->hasFile('attachment')) {
             $data['attachment'] = upload_file($request->file('attachment'), 'contacts_attachments');
