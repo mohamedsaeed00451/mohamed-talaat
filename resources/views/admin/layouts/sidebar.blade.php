@@ -4,7 +4,6 @@
     <div class="h-28 flex items-center px-8 relative overflow-hidden border-b border-white/[0.02]">
         <div class="absolute -top-10 -right-10 w-32 h-32 bg-accent-1/20 rounded-full blur-[40px] animate-pulse"></div>
         <div class="absolute bottom-0 -left-10 w-24 h-24 bg-primary/20 rounded-full blur-[30px]"></div>
-
         <div class="flex items-center gap-4 group cursor-pointer relative z-10 w-full">
             <div
                 class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
@@ -66,13 +65,122 @@
             </a>
         </div>
 
-        <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent my-6"></div>
-        <p class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] px-3 mb-6 opacity-70">التواصل والرسائل</p>
+        @php $isActive = request()->routeIs('admin.pages.*'); @endphp
+        <div class="relative group mt-1">
+            <div class="absolute right-[-20px] top-1/2 -translate-y-1/2 w-1.5 h-8 bg-purple-500 shadow-[0_0_15px_#a855f7] rounded-l-full transition-all duration-500 {{ $isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-y-0' }}"></div>
+            <a href="{{ route('admin.pages.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden {{ $isActive ? 'bg-white/10 border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)]' : 'hover:bg-white/[0.03] border border-transparent hover:border-white/5 hover:-translate-x-1' }}">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-purple-500 blur-xl transition-opacity duration-500 {{ $isActive ? 'opacity-50' : 'opacity-0 group-hover:opacity-30' }}"></div>
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center relative z-10 transition-all duration-500 {{ $isActive ? 'bg-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.4)]' : 'bg-white/5 group-hover:bg-white/10' }}">
+                        <svg class="w-5 h-5 {{ $isActive ? 'text-white drop-shadow-md' : 'text-gray-400 group-hover:text-white' }} transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <span class="{{ $isActive ? 'font-black text-white' : 'font-bold text-gray-400 group-hover:text-white' }} text-sm tracking-wide transition-colors">الصفحات المخصصة</span>
+            </a>
+        </div>
+
+        @php $isActive = request()->routeIs('admin.vault.*'); @endphp
+        <div class="relative group mt-1">
+            <div class="absolute right-[-20px] top-1/2 -translate-y-1/2 w-1.5 h-8 bg-yellow-500 shadow-[0_0_15px_#eab308] rounded-l-full transition-all duration-500 {{ $isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-y-0' }}"></div>
+            <a href="{{ route('admin.vault.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden {{ $isActive ? 'bg-white/10 border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)]' : 'hover:bg-white/[0.03] border border-transparent hover:border-white/5 hover:-translate-x-1' }}">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-yellow-500 blur-xl transition-opacity duration-500 {{ $isActive ? 'opacity-50' : 'opacity-0 group-hover:opacity-30' }}"></div>
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center relative z-10 transition-all duration-500 {{ $isActive ? 'bg-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.4)]' : 'bg-white/5 group-hover:bg-white/10' }}">
+                        <svg class="w-5 h-5 {{ $isActive ? 'text-white drop-shadow-md' : 'text-gray-400 group-hover:text-white' }} transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <span class="{{ $isActive ? 'font-black text-white' : 'font-bold text-gray-400 group-hover:text-white' }} text-sm tracking-wide transition-colors">الخزنة البحثية</span>
+            </a>
+        </div>
+
+        @php
+            $isArticlesActive = request()->routeIs('admin.article-types.*') || request()->routeIs('admin.articles.*');
+        @endphp
+
+        <div class="relative group mt-1" x-data="{ open: {{ $isArticlesActive ? 'true' : 'false' }} }">
+
+            <div class="absolute right-[-20px] top-6 -translate-y-1/2 w-1.5 h-8 bg-indigo-500 shadow-[0_0_15px_#6366f1] rounded-l-full transition-all duration-500 {{ $isArticlesActive ? 'opacity-100 scale-100' : 'opacity-0 scale-y-0' }}"></div>
+
+            <button @click="open = !open" type="button" class="cursor-pointer w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden {{ $isArticlesActive ? 'bg-white/10 border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)]' : 'hover:bg-white/[0.03] border border-transparent hover:border-white/5 hover:-translate-x-1' }}">
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-indigo-500 blur-xl transition-opacity duration-500 {{ $isArticlesActive ? 'opacity-50' : 'opacity-0 group-hover:opacity-30' }}"></div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center relative z-10 transition-all duration-500 {{ $isArticlesActive ? 'bg-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'bg-white/5 group-hover:bg-white/10' }}">
+                            <svg class="w-5 h-5 {{ $isArticlesActive ? 'text-white drop-shadow-md' : 'text-gray-400 group-hover:text-white' }} transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="{{ $isArticlesActive ? 'font-black text-white' : 'font-bold text-gray-400 group-hover:text-white' }} text-sm tracking-wide transition-colors">المقالات والأعمدة</span>
+                </div>
+
+                <svg :class="{'rotate-180': open}" class="w-4 h-4 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+
+            <div x-show="open" x-transition style="display: none;" class="mt-2 space-y-1 pr-14 pl-4">
+
+                <a href="{{ route('admin.article-types.index') }}" class="flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all {{ request()->routeIs('admin.article-types.*') ? 'bg-white/10 text-white font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5 font-semibold' }}">
+                    <div class="w-1.5 h-1.5 rounded-full {{ request()->routeIs('admin.article-types.*') ? 'bg-indigo-500 shadow-[0_0_8px_#6366f1]' : 'bg-gray-600' }}"></div>
+                    <span class="text-sm">التصنيفات</span>
+                </a>
+
+                <a href="{{ route('admin.articles.index') }}" class="flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all {{ request()->routeIs('admin.articles.*') ? 'bg-white/10 text-white font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5 font-semibold' }}">
+                    <div class="w-1.5 h-1.5 rounded-full {{ request()->routeIs('admin.articles.*') ? 'bg-indigo-500 shadow-[0_0_8px_#6366f1]' : 'bg-gray-600' }}"></div>
+                    <span class="text-sm">كل المقالات</span>
+                </a>
+
+            </div>
+        </div>
+
+        @php
+            $isMediaActive = request()->routeIs('admin.testimonials.*') || request()->routeIs('admin.conferences.*');
+        @endphp
+        <div class="relative group mt-1" x-data="{ open: {{ $isMediaActive ? 'true' : 'false' }} }">
+
+            <div class="absolute right-[-20px] top-6 -translate-y-1/2 w-1.5 h-8 bg-emerald-500 shadow-[0_0_15px_#10b981] rounded-l-full transition-all duration-500 {{ $isMediaActive ? 'opacity-100 scale-100' : 'opacity-0 scale-y-0' }}"></div>
+
+            <button @click="open = !open" type="button" class="cursor-pointer w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden {{ $isMediaActive ? 'bg-white/10 border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)]' : 'hover:bg-white/[0.03] border border-transparent hover:border-white/5 hover:-translate-x-1' }}">
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-emerald-500 blur-xl transition-opacity duration-500 {{ $isMediaActive ? 'opacity-50' : 'opacity-0 group-hover:opacity-30' }}"></div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center relative z-10 transition-all duration-500 {{ $isMediaActive ? 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.4)]' : 'bg-white/5 group-hover:bg-white/10' }}">
+                            <svg class="w-5 h-5 {{ $isMediaActive ? 'text-white drop-shadow-md' : 'text-gray-400 group-hover:text-white' }} transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="{{ $isMediaActive ? 'font-black text-white' : 'font-bold text-gray-400 group-hover:text-white' }} text-sm tracking-wide transition-colors">المركز الإعلامي</span>
+                </div>
+
+                <svg :class="{'rotate-180': open}" class="w-4 h-4 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+
+            <div x-show="open" x-transition style="display: none;" class="mt-2 space-y-1 pr-14 pl-4">
+
+                <a href="{{ route('admin.testimonials.index') }}" class="flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all {{ request()->routeIs('admin.testimonials.*') ? 'bg-white/10 text-white font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5 font-semibold' }}">
+                    <div class="w-1.5 h-1.5 rounded-full {{ request()->routeIs('admin.testimonials.*') ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-gray-600' }}"></div>
+                    <span class="text-sm">الاستشهادات</span>
+                </a>
+
+                <a href="{{ route('admin.conferences.index') }}" class="flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all {{ request()->routeIs('admin.conferences.*') ? 'bg-white/10 text-white font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5 font-semibold' }}">
+                    <div class="w-1.5 h-1.5 rounded-full {{ request()->routeIs('admin.conferences.*') ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-gray-600' }}"></div>
+                    <span class="text-sm">المقابلات والمؤتمرات</span>
+                </a>
+
+            </div>
+        </div>
 
         @php
             $isContactActive = request()->routeIs('admin.contact-types.*') || request()->routeIs('admin.contacts.*') || request()->routeIs('admin.subscribers.*');
         @endphp
-
         <div class="relative group" x-data="{ open: {{ $isContactActive ? 'true' : 'false' }} }">
 
             <div class="absolute right-[-20px] top-6 -translate-y-1/2 w-1.5 h-8 bg-[#3b82f6] shadow-[0_0_15px_#3b82f6] rounded-l-full transition-all duration-500 {{ $isContactActive ? 'opacity-100 scale-100' : 'opacity-0 scale-y-0' }}"></div>
@@ -117,6 +225,7 @@
                 </a>
             </div>
         </div>
+
         <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent my-6"></div>
 
         @php $isActive = request()->routeIs('admin.settings.*'); @endphp

@@ -116,6 +116,13 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="space-y-2 relative" dir="ltr">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/4 text-[10px] font-black text-red-500 bg-red-100 px-2 py-1 rounded z-10">SECRET</span>
+                            <label class="block text-sm font-black text-gray-500 text-right">الرقم السري للخزنة البحثية (Vault PIN)</label>
+                            <input type="text" name="vault_password" value="{{ $settings['vault_password'] ?? '' }}" placeholder="مثال: 123456"
+                                   class="w-full pr-20 pl-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-4 focus:ring-red-500/10 transition-all font-bold text-gray-800 shadow-inner">
+                        </div>
                     </div>
                 </div>
             </div>

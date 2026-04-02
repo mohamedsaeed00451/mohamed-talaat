@@ -9,7 +9,8 @@
 
     <title>@yield('title', 'الرئيسية') | لوحة تحكم د. محمد طلعت</title>
 
-    <meta name="description" content="@yield('meta_description', 'لوحة التحكم الخاصة بإدارة محتوى ومقالات الدكتور محمد طلعت.')">
+    <meta name="description"
+          content="@yield('meta_description', 'لوحة التحكم الخاصة بإدارة محتوى ومقالات الدكتور محمد طلعت.')">
     <meta name="keywords" content="د. محمد طلعت, لوحة تحكم, إدارة الموقع, إعلامي, مقالات">
     <meta name="author" content="د. محمد طلعت">
 
@@ -22,14 +23,16 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('title', 'الرئيسية') | لوحة تحكم د. محمد طلعت">
-    <meta property="og:description" content="@yield('meta_description', 'لوحة التحكم الخاصة بإدارة محتوى ومقالات الدكتور محمد طلعت.')">
+    <meta property="og:description"
+          content="@yield('meta_description', 'لوحة التحكم الخاصة بإدارة محتوى ومقالات الدكتور محمد طلعت.')">
     <meta property="og:image" content="{{ asset(get_setting('logo') ?? 'login-bg.png') }}">
     <meta property="og:site_name" content="موقع د. محمد طلعت">
     <meta property="og:locale" content="ar_AR">
 
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="@yield('title', 'الرئيسية') | لوحة تحكم د. محمد طلعت">
-    <meta name="twitter:description" content="@yield('meta_description', 'لوحة التحكم الخاصة بإدارة محتوى ومقالات الدكتور محمد طلعت.')">
+    <meta name="twitter:description"
+          content="@yield('meta_description', 'لوحة التحكم الخاصة بإدارة محتوى ومقالات الدكتور محمد طلعت.')">
     <meta name="twitter:image" content="{{ asset(get_setting('logo') ?? 'login-bg.png') }}">
 
     @if(get_setting('favicon'))
@@ -51,7 +54,8 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="loading font-sans antialiased text-gray-800 bg-[#fbfcfd] selection:bg-primary selection:text-white overflow-hidden">
+<body
+    class="loading font-sans antialiased text-gray-800 bg-[#fbfcfd] selection:bg-primary selection:text-white overflow-hidden">
 
 <div class="flex h-screen w-full relative z-0">
 
@@ -75,6 +79,8 @@
 
 @include('admin.layouts.scripts')
 
+@include('admin.layouts.ai-chat')
+
 </body>
-</html>
+
 </html>

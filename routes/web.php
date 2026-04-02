@@ -1,11 +1,18 @@
 <?php
 
+use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\ArticleTypeController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\ConferenceController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ContactTypeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SubscriberController;
+use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\VaultFileController;
+use App\Http\Controllers\ChatBot\ChatbotController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -38,6 +45,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('contacts/{contact}/toggle-read', [ContactController::class, 'toggleRead'])->name('contacts.toggle-read');
 
         Route::resource('subscribers', SubscriberController::class)->only(['index', 'destroy']);
+
+        Route::resource('testimonials', TestimonialController::class)->except(['create', 'show', 'edit']);
+
+        Route::resource('pages', PageController::class)->except(['show']);
+
+        Route::resource('vault', VaultFileController::class)->only(['index', 'store', 'destroy']);
+
+        Route::post('/chat', [ChatbotController::class, 'chat']);
+
+        Route::resource('conferences', ConferenceController::class)->except(['create', 'show', 'edit']);
+
+        Route::resource('article-types', ArticleTypeController::class)->except(['create', 'show', 'edit']);
+
+        Route::resource('articles', ArticleController::class)->except(['show']);
 
     });
 
