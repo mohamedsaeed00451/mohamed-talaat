@@ -19,8 +19,12 @@ class SettingController extends Controller
         $formattedSettings = [];
         $sliders = [];
 
-        foreach ($settings as $key => $value) {
+        $hiddenKeys = ['vault_password'];
 
+        foreach ($settings as $key => $value) {
+            if (in_array($key, $hiddenKeys)) {
+                continue;
+            }
             if (preg_match('/^slider_(\d+)_(.+)$/', $key, $matches)) {
                 $index = $matches[1];
                 $attribute = $matches[2];
