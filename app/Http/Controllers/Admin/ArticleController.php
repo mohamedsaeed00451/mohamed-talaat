@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
@@ -42,6 +43,11 @@ class ArticleController extends Controller
         ]);
 
         $data = $request->except(['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file']);
+
+        $data['slug'] = [
+            'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
+            'en' => Str::slug($request->input('title.en'))
+        ];
 
         $data['meta_title'] = [
             'ar' => $request->input('meta_title.ar'),
@@ -101,10 +107,16 @@ class ArticleController extends Controller
 
         $data = $request->except(['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file']);
 
+        $data['slug'] = [
+            'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
+            'en' => Str::slug($request->input('title.en'))
+        ];
+
         $data['meta_title'] = [
             'ar' => $request->input('meta_title.ar'),
             'en' => $request->input('meta_title.en')
         ];
+
         $data['meta_description'] = [
             'ar' => $request->input('meta_description.ar'),
             'en' => $request->input('meta_description.en')
@@ -116,7 +128,6 @@ class ArticleController extends Controller
         foreach ($files as $fileKey) {
             if ($request->hasFile($fileKey)) {
                 if ($article->$fileKey) delete_file($article->$fileKey);
-                // تحديد المسار بناءً على نوع الملف
                 $path = 'articles/files';
                 if ($fileKey == 'image') $path = 'articles/images';
                 if ($fileKey == 'meta_image') $path = 'articles/images/meta';

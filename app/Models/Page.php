@@ -11,6 +11,7 @@ class Page extends Model
     protected $casts = [
         'title' => 'array',
         'content' => 'array',
+        'images' => 'array',
     ];
 
 }

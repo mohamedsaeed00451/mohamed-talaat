@@ -13,41 +13,65 @@ class ArticleController extends Controller
 
     public function index(Request $request)
     {
-
         $query = Article::with('type')->latest();
 
-        if ($request->has('article_type_id') && $request->article_type_id != null) {
-            $query->where('article_type_id', $request->article_type_id);
+        if ($request->has('type_slug') && $request->type_slug != null) {
+            $slug = $request->type_slug;
+            $query->whereHas('type', function ($q) use ($slug) {
+                $q->where('slug->ar', $slug)
+                    ->orWhere('slug->en', $slug);
+            });
         }
 
         $articles = $query->paginate(10);
 
         $articles->through(function ($article) {
-            return [
-                'id' => $article->id,
-                'type' => [
-                    'id' => $article->type->id ?? null,
-                    'name' => $article->type->name ?? null,
-                ],
-                'title' => $article->title,
-                'description' => $article->description,
-
-                'image_url' => $article->image ? asset($article->image) : null,
-                'meta_image_url' => $article->meta_image ? asset($article->meta_image) : null,
-
-                'meta_title' => $article->meta_title,
-                'meta_description' => $article->meta_description,
-
-                'attachments' => [
-                    'white_papers' => $article->white_papers_file ? asset($article->white_papers_file) : null,
-                    'published_researches' => $article->published_researches_file ? asset($article->published_researches_file) : null,
-                    'executive_briefs' => $article->executive_briefs_file ? asset($article->executive_briefs_file) : null,
-                    'chronological_archive' => $article->chronological_archive_file ? asset($article->chronological_archive_file) : null,
-                ],
-                'created_at' => $article->created_at->format('Y-m-d'),
-            ];
+            return $this->formatArticle($article);
         });
 
-        return $this->responseMessage(200, true, 'articles', $articles);
+        return $this->responseMessage(200, true, 'تم جلب المقالات بنجاح', $articles);
+    }
+
+    public function show($slug)
+    {
+        $article = Article::with('type')
+            ->where('slug->ar', $slug)
+            ->orWhere('slug->en', $slug)
+            ->first();
+
+        if (!$article) {
+            return $this->responseMessage(404, false, 'المقال غير موجود');
+        }
+
+        return $this->responseMessage(200, true, 'تفاصيل المقال', $this->formatArticle($article));
+    }
+
+    private function formatArticle($article)
+    {
+        return [
+            'id' => $article->id,
+            'type' => [
+                'id' => $article->type->id ?? null,
+                'name' => $article->type->name ?? null,
+                'slug' => $article->type->slug ?? null,
+            ],
+            'title' => $article->title,
+            'slug' => $article->slug,
+            'description' => $article->description,
+
+            'image_url' => $article->image ? asset($article->image) : null,
+            'meta_image_url' => $article->meta_image ? asset($article->meta_image) : null,
+
+            'meta_title' => $article->meta_title,
+            'meta_description' => $article->meta_description,
+
+            'attachments' => [
+                'white_papers' => $article->white_papers_file ? asset($article->white_papers_file) : null,
+                'published_researches' => $article->published_researches_file ? asset($article->published_researches_file) : null,
+                'executive_briefs' => $article->executive_briefs_file ? asset($article->executive_briefs_file) : null,
+                'chronological_archive' => $article->chronological_archive_file ? asset($article->chronological_archive_file) : null,
+            ],
+            'created_at' => $article->created_at->format('Y-m-d'),
+        ];
     }
 }

@@ -49,6 +49,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('testimonials', TestimonialController::class)->except(['create', 'show', 'edit']);
 
         Route::resource('pages', PageController::class)->except(['show']);
+        Route::delete('pages/{page}/delete-image', [PageController::class, 'deleteImage'])->name('pages.deleteImage');
 
         Route::resource('vault', VaultFileController::class)->only(['index', 'store', 'destroy']);
 

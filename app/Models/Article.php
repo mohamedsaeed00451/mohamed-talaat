@@ -13,6 +13,7 @@ class Article extends Model
         'description' => 'array',
         'meta_title' => 'array',
         'meta_description' => 'array',
+        'slug' => 'array',
     ];
 
     public function type()

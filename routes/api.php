@@ -36,7 +36,7 @@ Route::middleware([ApiKeyMiddleware::class, ForceJsonResponseMiddleware::class])
     Route::get('/article-types', [ArticleTypeController::class, 'index']);
 
     Route::get('/articles', [ArticleController::class, 'index']);
-
+    Route::get('articles/{slug}', [ArticleController::class, 'show']);
 
 });
 

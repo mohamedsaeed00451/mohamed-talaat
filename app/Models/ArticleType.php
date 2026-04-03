@@ -10,6 +10,7 @@ class ArticleType extends Model
 
     protected $casts = [
         'name' => 'array',
+        'slug' => 'array',
     ];
 
 }

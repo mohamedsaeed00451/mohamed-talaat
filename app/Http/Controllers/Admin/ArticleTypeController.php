@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ArticleType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ArticleTypeController extends Controller
 {
@@ -21,10 +22,16 @@ class ArticleTypeController extends Controller
             'name.en' => 'required|string|max:255',
         ]);
 
+        $slugAr = preg_replace('/\s+/u', '-', trim($request->input('name.ar')));
+        $slugEn = Str::slug($request->input('name.en'));
         ArticleType::create([
             'name' => [
                 'ar' => $request->input('name.ar'),
                 'en' => $request->input('name.en')
+            ],
+            'slug' => [
+                'ar' => $slugAr,
+                'en' => $slugEn
             ]
         ]);
 
@@ -38,10 +45,16 @@ class ArticleTypeController extends Controller
             'name.en' => 'required|string|max:255',
         ]);
 
+        $slugAr = preg_replace('/\s+/u', '-', trim($request->input('name.ar')));
+        $slugEn = Str::slug($request->input('name.en'));
         $articleType->update([
             'name' => [
                 'ar' => $request->input('name.ar'),
                 'en' => $request->input('name.en')
+            ],
+            'slug' => [
+                'ar' => $slugAr,
+                'en' => $slugEn
             ]
         ]);
 
