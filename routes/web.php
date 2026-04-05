@@ -12,7 +12,6 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\VaultFileController;
-use App\Http\Controllers\ChatBot\ChatbotController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -52,8 +51,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('pages/{page}/delete-image', [PageController::class, 'deleteImage'])->name('pages.deleteImage');
 
         Route::resource('vault', VaultFileController::class)->only(['index', 'store', 'destroy']);
-
-        Route::post('/chat', [ChatbotController::class, 'chat']);
 
         Route::resource('conferences', ConferenceController::class)->except(['create', 'show', 'edit']);
 

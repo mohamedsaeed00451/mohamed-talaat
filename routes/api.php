@@ -14,6 +14,8 @@ use App\Http\Middleware\ForceJsonResponseMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\SettingController;
 
+Route::post('/chat', [ChatbotController::class, 'chat']);
+
 Route::middleware([ApiKeyMiddleware::class, ForceJsonResponseMiddleware::class])->group(function () {
 
     Route::get('/settings', [SettingController::class, 'index']);
@@ -26,8 +28,6 @@ Route::middleware([ApiKeyMiddleware::class, ForceJsonResponseMiddleware::class])
     Route::get('/testimonials', [TestimonialController::class, 'index']);
 
     Route::get('/pages', [PageController::class, 'index']);
-
-    Route::post('/chat', [ChatbotController::class, 'chat']);
 
     Route::post('/vault/access', [VaultFileController::class, 'index']);
 
