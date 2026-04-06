@@ -4,7 +4,11 @@ use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\ArticleTypeController;
 use App\Http\Controllers\Api\ConferenceController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\PageController;
+use App\Http\Controllers\Api\PodcastController;
+use App\Http\Controllers\Api\PostCategoryController;
+use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\SubscriberController;
 use App\Http\Controllers\Api\TestimonialController;
 use App\Http\Controllers\Api\VaultFileController;
@@ -38,5 +42,13 @@ Route::middleware([ApiKeyMiddleware::class, ForceJsonResponseMiddleware::class])
     Route::get('/articles', [ArticleController::class, 'index']);
     Route::get('articles/{slug}', [ArticleController::class, 'show']);
 
+    Route::get('/galleries', [GalleryController::class, 'index']);
+
+    Route::get('/post-categories', [PostCategoryController::class, 'index']);
+
+    Route::get('/posts', [PostController::class, 'index']);
+    Route::get('posts/{slug}', [PostController::class, 'show']);
+
+    Route::get('/podcasts', [PodcastController::class, 'index']);
 });
 

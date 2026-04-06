@@ -7,7 +7,11 @@ use App\Http\Controllers\Admin\ConferenceController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ContactTypeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\PodcastController;
+use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\Admin\TestimonialController;
@@ -57,6 +61,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('article-types', ArticleTypeController::class)->except(['create', 'show', 'edit']);
 
         Route::resource('articles', ArticleController::class)->except(['show']);
+
+        Route::resource('galleries', GalleryController::class)->except(['show']);
+        Route::delete('galleries/{gallery}/delete-image', [GalleryController::class, 'deleteImage'])->name('galleries.deleteImage');
+
+        Route::resource('post-categories', PostCategoryController::class)->except(['create', 'show', 'edit']);
+
+        Route::resource('posts', PostController::class);
+
+        Route::resource('podcasts', PodcastController::class)->except(['create', 'show', 'edit']);
 
     });
 

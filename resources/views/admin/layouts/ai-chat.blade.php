@@ -1,6 +1,6 @@
-<div x-data="talaatChatbot()" class="cursor-pointer fixed bottom-6 right-6 z-[9999] font-['Cairo']">
+<div x-data="talaatChatbot()" class="cursor-pointer fixed bottom-6 left-6 z-[9999] font-['Cairo']">
 
-    <button @click="toggleChat()" x-show="!isOpen" x-transition.scale.origin.bottom.right
+    <button @click="toggleChat()" x-show="!isOpen" x-transition.scale.origin.bottom.left
             class="cursor-pointer w-16 h-16 bg-blue-900 text-white rounded-full shadow-2xl flex items-center justify-center hover:bg-blue-800 transition-colors focus:outline-none">
         <svg class="cursor-pointer w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -8,7 +8,7 @@
         </svg>
     </button>
 
-    <div x-show="isOpen" x-transition.scale.origin.bottom.right style="display: none;"
+    <div x-show="isOpen" x-transition.scale.origin.bottom.left style="display: none;"
          class="w-[350px] sm:w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-100">
 
         <div class="bg-blue-900 px-5 py-4 flex items-center justify-between shadow-md z-10">
@@ -19,7 +19,7 @@
                         ط
                     </div>
                     <span
-                        class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-blue-900 rounded-full"></span>
+                        class="absolute bottom-0 left-0 w-3 h-3 bg-green-500 border-2 border-blue-900 rounded-full"></span>
                 </div>
                 <div>
                     <h3 class="text-white font-black text-lg leading-tight">طلعت AI</h3>
