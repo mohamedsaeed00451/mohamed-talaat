@@ -189,7 +189,7 @@
 
             <div x-show="open" x-transition style="display: none;" class="mt-2 space-y-1 pr-14 pl-4">
 
-                <a href="#" class="flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all {{ request()->routeIs('admin.posts.*') ? 'bg-white/10 text-white font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5 font-semibold' }}">
+                <a href="{{ route('admin.posts.index') }}" class="flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all {{ request()->routeIs('admin.posts.*') ? 'bg-white/10 text-white font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5 font-semibold' }}">
                     <div class="w-1.5 h-1.5 rounded-full {{ request()->routeIs('admin.posts.*') ? 'bg-blue-500 shadow-[0_0_8px_#3b82f6]' : 'bg-gray-600' }}"></div>
                     <span class="text-sm">إدارة المقالات</span>
                 </a>

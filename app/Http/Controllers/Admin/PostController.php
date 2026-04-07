@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\PostCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -55,7 +57,23 @@ class PostController extends Controller
             $data['attachment_file'] = upload_file($request->file('attachment_file'), 'posts/files');
         }
 
-        Post::create($data);
+        $post = Post::create($data);
+
+        try {
+
+            $postUrl = config('app.web_site_url') . '/' . $post->slug['ar'];
+            $imageUrl = $post->image ? asset($post->image) : null;
+            $webhookUrl = config('app.webhook_url');
+            Http::timeout(5)->post($webhookUrl, [
+                'title' => $post->title['ar'],
+                'content' => strip_tags($post->description['ar']),
+                'url' => $postUrl,
+                'image_url' => $imageUrl,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Webhook Error: ' . $e->getMessage());
+        }
 
         return redirect()->route('admin.posts.index')->with('success', 'تم إضافة المقال بنجاح!');
     }

@@ -17,6 +17,10 @@ return [
 
     'api_key' => env('API_KEY', ''),
 
+    'webhook_url' => env('WEBHOOK_URL', ''),
+
+    'web_site_url' => env('WEB_SITE_URL', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
