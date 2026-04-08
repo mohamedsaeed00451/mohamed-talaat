@@ -83,6 +83,86 @@
                 </div>
             </div>
 
+
+            @php
+                $isScheduled = $post->published_at && $post->published_at > now();
+            @endphp
+            <div class="space-y-6 pt-6 mt-6 border-t border-gray-100" x-data="{ publishType: '{{ $isScheduled ? 'schedule' : 'now' }}', autoPublish: {{ $post->auto_publish ? 'true' : 'false' }} }">
+                <div class="flex items-center gap-2 border-b border-gray-100 pb-2 mb-6">
+                    <h3 class="text-lg font-black text-primary">إعدادات النشر والحالة</h3>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="space-y-4 p-5 bg-gray-50 rounded-2xl border border-gray-100">
+
+                        <label class="flex items-center justify-between cursor-pointer group">
+                            <span class="text-sm font-black text-gray-800 group-hover:text-primary transition-colors">مقال مفعل (يظهر للزوار)</span>
+                            <div class="relative">
+                                <input type="checkbox" name="is_active" value="1" {{ $post->is_active ? 'checked' : '' }} class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                            </div>
+                        </label>
+
+                        <label class="flex items-center justify-between cursor-pointer group">
+                            <span class="text-sm font-black text-gray-800 group-hover:text-primary transition-colors">مقال مميز (Featured)</span>
+                            <div class="relative">
+                                <input type="checkbox" name="is_featured" value="1" {{ $post->is_featured ? 'checked' : '' }} class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                            </div>
+                        </label>
+
+                        <label class="flex items-center justify-between cursor-pointer group">
+                            <span class="text-sm font-black text-gray-800 group-hover:text-primary transition-colors">مقال أرشيفي / قديم</span>
+                            <div class="relative">
+                                <input type="checkbox" name="is_old" value="1" {{ $post->is_old ? 'checked' : '' }} class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gray-700"></div>
+                            </div>
+                        </label>
+
+                        <div class="pt-4 mt-4 border-t border-gray-200">
+                            <label class="flex items-center justify-between cursor-pointer group">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-black text-gray-800 group-hover:text-blue-600 transition-colors">نشر تلقائي على السوشيال ميديا</span>
+                                    <span class="text-[10px] text-gray-500 font-bold">
+                                        @if($post->social_published)
+                                            <span class="text-green-500">تم النشر مسبقاً ✔️</span>
+                                        @else
+                                            سيتم الإرسال إلى (فيسبوك، لينكدإن، الخ)
+                                        @endif
+                                    </span>
+                                </div>
+                                <div class="relative">
+                                    <input type="checkbox" name="auto_publish" value="1" x-model="autoPublish" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 shadow-[0_0_10px_rgba(37,99,235,0.3)]"></div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 p-5 bg-blue-50/50 rounded-2xl border border-blue-100">
+                        <label class="block text-sm font-black text-blue-900 mb-3">وقت النشر والظهور في الموقع:</label>
+
+                        <div class="flex items-center gap-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="publish_type" value="now" x-model="publishType" class="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                                <span class="text-sm font-black text-gray-700">نشر فوراً ⚡</span>
+                            </label>
+
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="publish_type" value="schedule" x-model="publishType" class="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                                <span class="text-sm font-black text-gray-700">جدولة لوقت لاحق 📅</span>
+                            </label>
+                        </div>
+
+                        <div x-show="publishType === 'schedule'" x-transition x-cloak class="mt-4" style="{{ $isScheduled ? '' : 'display: none;' }}">
+                            <label class="block text-xs font-black text-gray-500 mb-2">اختر التاريخ والوقت:</label>
+                            <input type="datetime-local" name="published_at" value="{{ $post->published_at ? $post->published_at->format('Y-m-d\TH:i') : '' }}" class="w-full px-4 py-3 bg-white border border-blue-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/20 font-bold text-gray-700">
+                            <p class="text-[10px] text-gray-400 mt-2 font-bold">لن يظهر المقال في الموقع ولن يتم نشره على السوشيال ميديا إلا بعد هذا الوقت.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="space-y-6 pt-6 mt-6 border-t border-gray-100">
                 <div class="flex items-center gap-2 border-b border-gray-100 pb-2">
                     <h3 class="text-lg font-black text-primary">تحسين محركات البحث (SEO)</h3>

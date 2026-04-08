@@ -67,13 +67,11 @@
         swalWithBootstrapButtons.fire({
             icon: 'error',
             title: 'عذراً، يوجد خطأ!',
-            html: `
-                <ul class="text-sm font-bold text-red-600 space-y-2 text-right mt-4" dir="rtl">
+            html: `<ul class="text-sm font-bold text-red-600 space-y-2 text-right mt-4" dir="rtl">
                     @foreach ($errors->all() as $error)
             <li>• {{ $error }}</li>
                     @endforeach
-            </ul>
-`,
+            </ul>`,
             confirmButtonText: 'حسناً فهمت',
             customClass: {
                 popup: 'rounded-[2rem] shadow-2xl border border-gray-100',

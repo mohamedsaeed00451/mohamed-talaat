@@ -14,7 +14,7 @@ class PostController extends Controller
     public function index(Request $request)
     {
 
-        $query = Post::with('category')->latest();
+        $query = Post::with('category')->where('is_active',1)->latest();
 
         if ($request->has('category_slug') && $request->category_slug != null) {
             $slug = $request->category_slug;

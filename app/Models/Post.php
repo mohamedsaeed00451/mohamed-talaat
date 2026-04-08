@@ -15,6 +15,12 @@ class Post extends Model
         'strategic_brief' => 'array',
         'meta_title' => 'array',
         'meta_description' => 'array',
+        'is_active' => 'boolean',
+        'is_featured' => 'boolean',
+        'is_old' => 'boolean',
+        'auto_publish' => 'boolean',
+        'social_published' => 'boolean',
+        'published_at' => 'datetime',
     ];
 
     public function category()

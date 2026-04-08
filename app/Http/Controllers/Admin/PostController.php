@@ -42,15 +42,24 @@ class PostController extends Controller
             'meta_description.ar' => 'nullable|string',
             'meta_description.en' => 'nullable|string',
             'meta_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'publish_type' => 'required|in:now,schedule',
+            'published_at' => 'nullable|required_if:publish_type,schedule|date',
         ]);
 
-        $data = $request->except(['image', 'meta_image', 'attachment_file']);
-
+        $data = $request->except(['image', 'meta_image', 'attachment_file', 'publish_type']);
+        $data['is_active'] = $request->has('is_active');
+        $data['is_featured'] = $request->has('is_featured');
+        $data['is_old'] = $request->has('is_old');
+        $data['auto_publish'] = $request->has('auto_publish');
         $data['slug'] = [
             'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
             'en' => Str::slug($request->input('title.en'))
         ];
-
+        if ($request->publish_type == 'now') {
+            $data['published_at'] = now();
+        } else {
+            $data['published_at'] = $request->published_at;
+        }
         if ($request->hasFile('image')) $data['image'] = upload_file($request->file('image'), 'posts/images');
         if ($request->hasFile('meta_image')) $data['meta_image'] = upload_file($request->file('meta_image'), 'posts/images/meta');
         if ($request->hasFile('attachment_file')) {
@@ -59,21 +68,33 @@ class PostController extends Controller
 
         $post = Post::create($data);
 
-        try {
+        if ($post->auto_publish && $post->published_at <= now()) {
+            try {
 
-            $postUrl = config('app.web_site_url') . '/' . $post->slug['ar'];
-            $imageUrl = $post->image ? asset($post->image) : null;
-            $webhookUrl = config('app.webhook_url');
-            Http::timeout(5)->post($webhookUrl, [
-                'title' => $post->title['ar'],
-                'content' => strip_tags($post->description['ar']),
-                'url' => $postUrl,
-                'image_url' => $imageUrl,
-            ]);
+                $postUrl = config('app.web_site_url') . '/' . $post->slug['ar'];
 
-        } catch (\Exception $e) {
-            Log::error('Webhook Error: ' . $e->getMessage());
+                if (app()->environment('local')) {
+                    $imageUrl = 'https://picsum.photos/800/600';
+                } else {
+                    $imageUrl = $post->image ? asset($post->image) : null;
+                }
+
+                $webhookUrl = config('app.webhook_url');
+
+                Http::timeout(5)->post($webhookUrl, [
+                    'title' => $post->title['ar'],
+                    'content' => strip_tags($post->description['ar']),
+                    'url' => $postUrl,
+                    'image_url' => $imageUrl,
+                ]);
+
+                $post->update(['social_published' => true]);
+
+            } catch (\Exception $e) {
+                Log::error('Webhook Error: ' . $e->getMessage());
+            }
         }
+
 
         return redirect()->route('admin.posts.index')->with('success', 'تم إضافة المقال بنجاح!');
     }
@@ -102,15 +123,24 @@ class PostController extends Controller
             'meta_description.ar' => 'nullable|string',
             'meta_description.en' => 'nullable|string',
             'meta_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'publish_type' => 'required|in:now,schedule',
+            'published_at' => 'nullable|required_if:publish_type,schedule|date',
         ]);
 
-        $data = $request->except(['image', 'meta_image', 'attachment_file']);
-
+        $data = $request->except(['image', 'meta_image', 'attachment_file', 'publish_type']);
+        $data['is_active'] = $request->has('is_active');
+        $data['is_featured'] = $request->has('is_featured');
+        $data['is_old'] = $request->has('is_old');
+        $data['auto_publish'] = $request->has('auto_publish');
         $data['slug'] = [
             'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
             'en' => Str::slug($request->input('title.en'))
         ];
-
+        if ($request->publish_type == 'now') {
+            $data['published_at'] = now();
+        } else {
+            $data['published_at'] = $request->published_at;
+        }
         $files = ['image', 'meta_image', 'attachment_file'];
         foreach ($files as $fileKey) {
             if ($request->hasFile($fileKey)) {
@@ -125,6 +155,33 @@ class PostController extends Controller
 
         $post->update($data);
 
+        if ($post->auto_publish && $post->published_at <= now()) {
+            try {
+
+                $postUrl = config('app.web_site_url') . '/' . $post->slug['ar'];
+
+                if (app()->environment('local')) {
+                    $imageUrl = 'https://picsum.photos/800/600';
+                } else {
+                    $imageUrl = $post->image ? asset($post->image) : null;
+                }
+
+                $webhookUrl = config('app.webhook_url');
+
+                Http::timeout(5)->post($webhookUrl, [
+                    'title' => $post->title['ar'],
+                    'content' => strip_tags($post->description['ar']),
+                    'url' => $postUrl,
+                    'image_url' => $imageUrl,
+                ]);
+
+                $post->update(['social_published' => true]);
+
+            } catch (\Exception $e) {
+                Log::error('Webhook Error: ' . $e->getMessage());
+            }
+        }
+
         return redirect()->route('admin.posts.index')->with('success', 'تم تعديل المقال بنجاح!');
     }
 
@@ -136,5 +193,19 @@ class PostController extends Controller
 
         $post->delete();
         return back()->with('success', 'تم الحذف بنجاح!');
+    }
+
+    public function toggleStatus(Request $request, Post $post)
+    {
+        $request->validate([
+            'field' => 'required|in:is_active,is_featured,is_old',
+            'state' => 'required|boolean'
+        ]);
+
+        $post->update([
+            $request->field => $request->state
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'تم التحديث بنجاح']);
     }
 }

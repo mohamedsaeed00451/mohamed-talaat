@@ -68,6 +68,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('post-categories', PostCategoryController::class)->except(['create', 'show', 'edit']);
 
         Route::resource('posts', PostController::class);
+        Route::post('posts/{post}/toggle', [PostController::class, 'toggleStatus'])->name('posts.toggle');
 
         Route::resource('podcasts', PodcastController::class)->except(['create', 'show', 'edit']);
 

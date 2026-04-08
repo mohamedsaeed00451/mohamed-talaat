@@ -18,7 +18,6 @@ class DashboardController extends Controller
     public function index(): View
     {
         $articlesCount = Article::count();
-        $postsCount = Post::count();
         $vaultFilesCount = VaultFile::count();
         $galleriesCount = Gallery::count();
         $podcastsCount = Podcast::count();
@@ -27,9 +26,17 @@ class DashboardController extends Controller
         $subscribersCount = Subscriber::count();
         $latestContacts = Contact::latest()->take(4)->get();
 
+        $postsStats = [
+            'total' => Post::count(),
+            'published' => Post::where('is_active', true)->where('published_at', '<=', now())->count(),
+            'scheduled' => Post::where('is_active', true)->where('published_at', '>', now())->count(),
+            'featured' => Post::where('is_featured', true)->count(),
+            'old' => Post::where('is_old', true)->count(),
+        ];
+
         return view('admin.dashboard', compact(
             'articlesCount',
-            'postsCount',
+            'postsStats',
             'vaultFilesCount',
             'galleriesCount',
             'podcastsCount',
