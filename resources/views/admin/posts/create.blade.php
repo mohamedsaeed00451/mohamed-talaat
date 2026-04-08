@@ -170,7 +170,7 @@
             </div>
 
             <div class="pt-6 border-t border-gray-50 flex justify-end">
-                <button type="submit" :disabled="isSubmitting" class="flex items-center gap-2 px-10 py-4 bg-primary text-white rounded-xl font-black shadow-lg shadow-primary/30 disabled:opacity-70">
+                <button type="submit" :disabled="isSubmitting" class="cursor-pointer flex items-center gap-2 px-10 py-4 bg-primary text-white rounded-xl font-black shadow-lg shadow-primary/30 disabled:opacity-70">
                     <span x-show="!isSubmitting">حفظ المقال</span>
                     <span x-show="isSubmitting" style="display:none;">جاري الحفظ والرفع...</span>
                 </button>
