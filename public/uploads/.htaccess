@@ -1,0 +1,9 @@
+Options -Indexes
+
+<FilesMatch "\.(php|php[3-8]|phtml|pl|py|jsp|asp|sh|cgi|exe|sh)$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "\.(html|htm|js|swf)$">
+    Header set Content-Disposition "attachment"
+</FilesMatch>
