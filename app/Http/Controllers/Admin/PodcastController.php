@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Podcast;
 use Illuminate\Http\Request;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
 
 class PodcastController extends Controller
 {
@@ -28,6 +30,19 @@ class PodcastController extends Controller
 
         $data = $request->except('image');
 
+        $sanitizerConfig = (new HtmlSanitizerConfig())
+            ->allowSafeElements()
+            ->allowElement('img', ['src', 'alt', 'title', 'width', 'height', 'style'])
+            ->allowElement('a', ['href', 'title', 'target', 'rel'])
+            ->allowAttribute('style', '*');
+
+        $sanitizer = new HtmlSanitizer($sanitizerConfig);
+
+        $data['description'] = [
+            'ar' => $sanitizer->sanitize($request->input('description.ar')),
+            'en' => $sanitizer->sanitize($request->input('description.en')),
+        ];
+
         if ($request->hasFile('image')) {
             $data['image'] = upload_file($request->file('image'), 'podcasts');
         }
@@ -50,6 +65,19 @@ class PodcastController extends Controller
         ]);
 
         $data = $request->except('image');
+
+        $sanitizerConfig = (new HtmlSanitizerConfig())
+            ->allowSafeElements()
+            ->allowElement('img', ['src', 'alt', 'title', 'width', 'height', 'style'])
+            ->allowElement('a', ['href', 'title', 'target', 'rel'])
+            ->allowAttribute('style', '*');
+
+        $sanitizer = new HtmlSanitizer($sanitizerConfig);
+
+        $data['description'] = [
+            'ar' => $sanitizer->sanitize($request->input('description.ar')),
+            'en' => $sanitizer->sanitize($request->input('description.en')),
+        ];
 
         if ($request->hasFile('image')) {
             if ($podcast->image) delete_file($podcast->image);

@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
 
 class PostController extends Controller
 {
@@ -49,20 +51,44 @@ class PostController extends Controller
         ]);
 
         $data = $request->except(['image', 'meta_image', 'attachment_file', 'publish_type']);
+
+        $sanitizerConfig = (new HtmlSanitizerConfig())
+            ->allowSafeElements()
+            ->allowElement('img', ['src', 'alt', 'title', 'width', 'height', 'style'])
+            ->allowElement('a', ['href', 'title', 'target', 'rel'])
+            ->allowAttribute('style', '*');
+
+        $sanitizer = new HtmlSanitizer($sanitizerConfig);
+
+        $data['description'] = [
+            'ar' => $sanitizer->sanitize($request->input('description.ar')),
+            'en' => $sanitizer->sanitize($request->input('description.en')),
+        ];
+
+        if ($request->filled('strategic_brief.ar') || $request->filled('strategic_brief.en')) {
+            $data['strategic_brief'] = [
+                'ar' => $request->input('strategic_brief.ar') ? $sanitizer->sanitize($request->input('strategic_brief.ar')) : null,
+                'en' => $request->input('strategic_brief.en') ? $sanitizer->sanitize($request->input('strategic_brief.en')) : null,
+            ];
+        }
+
         $data['is_active'] = $request->has('is_active');
         $data['is_featured'] = $request->has('is_featured');
         $data['is_old'] = $request->has('is_old');
         $data['social_platforms'] = $request->input('social_platforms', []);
         $data['auto_publish'] = count($data['social_platforms']) > 0;
+
         $data['slug'] = [
             'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
             'en' => Str::slug($request->input('title.en'))
         ];
+
         if ($request->publish_type == 'now') {
             $data['published_at'] = now();
         } else {
             $data['published_at'] = $request->published_at;
         }
+
         if ($request->hasFile('image')) $data['image'] = upload_file($request->file('image'), 'posts/images');
         if ($request->hasFile('meta_image')) $data['meta_image'] = upload_file($request->file('meta_image'), 'posts/images/meta');
         if ($request->hasFile('attachment_file')) {
@@ -73,7 +99,6 @@ class PostController extends Controller
 
         if ($post->auto_publish && $post->published_at <= now()) {
             try {
-
                 $postUrl = config('app.web_site_url') . '/' . $post->slug['ar'];
 
                 if (app()->environment('local')) {
@@ -98,7 +123,6 @@ class PostController extends Controller
                 Log::error('Webhook Error: ' . $e->getMessage());
             }
         }
-
 
         return redirect()->route('admin.posts.index')->with('success', 'تم إضافة المقال بنجاح!');
     }
@@ -134,20 +158,44 @@ class PostController extends Controller
         ]);
 
         $data = $request->except(['image', 'meta_image', 'attachment_file', 'publish_type']);
+
+        $sanitizerConfig = (new HtmlSanitizerConfig())
+            ->allowSafeElements()
+            ->allowElement('img', ['src', 'alt', 'title', 'width', 'height', 'style'])
+            ->allowElement('a', ['href', 'title', 'target', 'rel'])
+            ->allowAttribute('style', '*');
+
+        $sanitizer = new HtmlSanitizer($sanitizerConfig);
+
+        $data['description'] = [
+            'ar' => $sanitizer->sanitize($request->input('description.ar')),
+            'en' => $sanitizer->sanitize($request->input('description.en')),
+        ];
+
+        if ($request->filled('strategic_brief.ar') || $request->filled('strategic_brief.en')) {
+            $data['strategic_brief'] = [
+                'ar' => $request->input('strategic_brief.ar') ? $sanitizer->sanitize($request->input('strategic_brief.ar')) : null,
+                'en' => $request->input('strategic_brief.en') ? $sanitizer->sanitize($request->input('strategic_brief.en')) : null,
+            ];
+        }
+
         $data['is_active'] = $request->has('is_active');
         $data['is_featured'] = $request->has('is_featured');
         $data['is_old'] = $request->has('is_old');
         $data['social_platforms'] = $request->input('social_platforms', []);
         $data['auto_publish'] = count($data['social_platforms']) > 0;
+
         $data['slug'] = [
             'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
             'en' => Str::slug($request->input('title.en'))
         ];
+
         if ($request->publish_type == 'now') {
             $data['published_at'] = now();
         } else {
             $data['published_at'] = $request->published_at;
         }
+
         $files = ['image', 'meta_image', 'attachment_file'];
         foreach ($files as $fileKey) {
             if ($request->hasFile($fileKey)) {
@@ -164,7 +212,6 @@ class PostController extends Controller
 
         if ($post->auto_publish && $post->published_at <= now()) {
             try {
-
                 $postUrl = config('app.web_site_url') . '/' . $post->slug['ar'];
 
                 if (app()->environment('local')) {

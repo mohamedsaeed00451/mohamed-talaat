@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
 
 class PageController extends Controller
 {
@@ -32,10 +34,24 @@ class PageController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
+        $sanitizerConfig = (new HtmlSanitizerConfig())
+            ->allowSafeElements()
+            ->allowElement('img', ['src', 'alt', 'title', 'width', 'height', 'style'])
+            ->allowElement('a', ['href', 'title', 'target', 'rel'])
+            ->allowAttribute('style', '*');
+
+        $sanitizer = new HtmlSanitizer($sanitizerConfig);
+
         $data = [
-            'title'   => ['ar' => $request->input('title.ar'), 'en' => $request->input('title.en')],
+            'title'   => [
+                'ar' => $request->input('title.ar'),
+                'en' => $request->input('title.en')
+            ],
             'slug'    => Str::slug($request->slug),
-            'content' => ['ar' => $request->input('content.ar'), 'en' => $request->input('content.en')],
+            'content' => [
+                'ar' => $sanitizer->sanitize($request->input('content.ar')),
+                'en' => $sanitizer->sanitize($request->input('content.en'))
+            ],
         ];
 
         if ($request->hasFile('pdf_file')) {
@@ -49,7 +65,9 @@ class PageController extends Controller
             }
         }
 
-        $data['images'] = $imagePaths;
+        if (!empty($imagePaths)) {
+            $data['images'] = $imagePaths;
+        }
 
         Page::create($data);
 
@@ -73,10 +91,24 @@ class PageController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
+        $sanitizerConfig = (new HtmlSanitizerConfig())
+            ->allowSafeElements()
+            ->allowElement('img', ['src', 'alt', 'title', 'width', 'height', 'style'])
+            ->allowElement('a', ['href', 'title', 'target', 'rel'])
+            ->allowAttribute('style', '*');
+
+        $sanitizer = new HtmlSanitizer($sanitizerConfig);
+
         $data = [
-            'title'   => ['ar' => $request->input('title.ar'), 'en' => $request->input('title.en')],
+            'title'   => [
+                'ar' => $request->input('title.ar'),
+                'en' => $request->input('title.en')
+            ],
             'slug'    => Str::slug($request->slug),
-            'content' => ['ar' => $request->input('content.ar'), 'en' => $request->input('content.en')],
+            'content' => [
+                'ar' => $sanitizer->sanitize($request->input('content.ar')),
+                'en' => $sanitizer->sanitize($request->input('content.en'))
+            ],
         ];
 
         if ($request->hasFile('pdf_file')) {
@@ -84,7 +116,7 @@ class PageController extends Controller
             $data['pdf_file'] = upload_file($request->file('pdf_file'), 'pages/files');
         }
 
-        $imagePaths = $page->images ?? [];
+        $imagePaths = is_array($page->images) ? $page->images : [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $img) {
                 $imagePaths[] = upload_file($img, 'pages/images');
@@ -102,7 +134,7 @@ class PageController extends Controller
     {
         if ($page->pdf_file) delete_file($page->pdf_file);
 
-        if ($page->images) {
+        if (is_array($page->images)) {
             foreach ($page->images as $img) {
                 delete_file($img);
             }
@@ -115,7 +147,7 @@ class PageController extends Controller
     public function deleteImage(Request $request, Page $page)
     {
         $imagePath = $request->input('image_path');
-        $images = $page->images ?? [];
+        $images = is_array($page->images) ? $page->images : [];
 
         if (($key = array_search($imagePath, $images)) !== false) {
             delete_file($imagePath);
@@ -125,5 +157,4 @@ class PageController extends Controller
 
         return back()->with('success', 'تم حذف الصورة بنجاح!');
     }
-
 }

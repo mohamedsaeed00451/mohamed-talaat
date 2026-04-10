@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ForceJsonResponseMiddleware;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
@@ -18,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(SecurityHeaders::class);
+        $middleware->api(append: [
+            'throttle:60,1',
+        ]);
         $middleware->redirectGuestsTo('admin/login');
         $middleware->redirectUsersTo('admin/dashboard');
     })

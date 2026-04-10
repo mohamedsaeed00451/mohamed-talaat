@@ -21,7 +21,7 @@ class SecurityHeaders
             $csp .= "script-src 'self' 'unsafe-inline' 'unsafe-eval'; ";
             $csp .= "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; ";
             $csp .= "font-src 'self' https://fonts.gstatic.com; ";
-            $csp .= "img-src 'self' data:; ";
+            $csp .= "img-src 'self' data: https:; ";
             $response->headers->set('Content-Security-Policy', $csp);
         }
 

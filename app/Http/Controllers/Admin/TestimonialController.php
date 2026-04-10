@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
 
 class TestimonialController extends Controller
 {
@@ -21,10 +23,18 @@ class TestimonialController extends Controller
             'text.en' => 'required|string',
         ]);
 
+        $sanitizerConfig = (new HtmlSanitizerConfig())
+            ->allowSafeElements()
+            ->allowElement('img', ['src', 'alt', 'title', 'width', 'height', 'style'])
+            ->allowElement('a', ['href', 'title', 'target', 'rel'])
+            ->allowAttribute('style', '*');
+
+        $sanitizer = new HtmlSanitizer($sanitizerConfig);
+
         Testimonial::create([
             'text' => [
-                'ar' => $request->input('text.ar'),
-                'en' => $request->input('text.en'),
+                'ar' => $sanitizer->sanitize($request->input('text.ar')),
+                'en' => $sanitizer->sanitize($request->input('text.en')),
             ]
         ]);
 
@@ -38,10 +48,18 @@ class TestimonialController extends Controller
             'text.en' => 'required|string',
         ]);
 
+        $sanitizerConfig = (new HtmlSanitizerConfig())
+            ->allowSafeElements()
+            ->allowElement('img', ['src', 'alt', 'title', 'width', 'height', 'style'])
+            ->allowElement('a', ['href', 'title', 'target', 'rel'])
+            ->allowAttribute('style', '*');
+
+        $sanitizer = new HtmlSanitizer($sanitizerConfig);
+
         $testimonial->update([
             'text' => [
-                'ar' => $request->input('text.ar'),
-                'en' => $request->input('text.en'),
+                'ar' => $sanitizer->sanitize($request->input('text.ar')),
+                'en' => $sanitizer->sanitize($request->input('text.en')),
             ]
         ]);
 

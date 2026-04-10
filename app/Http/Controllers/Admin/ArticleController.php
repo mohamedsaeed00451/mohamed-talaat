@@ -7,6 +7,8 @@ use App\Models\Article;
 use App\Models\ArticleType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
 
 class ArticleController extends Controller
 {
@@ -44,6 +46,19 @@ class ArticleController extends Controller
 
         $data = $request->except(['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file']);
 
+        $sanitizerConfig = (new HtmlSanitizerConfig())
+            ->allowSafeElements()
+            ->allowElement('img', ['src', 'alt', 'title', 'width', 'height', 'style'])
+            ->allowElement('a', ['href', 'title', 'target', 'rel'])
+            ->allowAttribute('style', '*');
+
+        $sanitizer = new HtmlSanitizer($sanitizerConfig);
+
+        $data['description'] = [
+            'ar' => $sanitizer->sanitize($request->input('description.ar')),
+            'en' => $sanitizer->sanitize($request->input('description.en')),
+        ];
+
         $data['slug'] = [
             'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
             'en' => Str::slug($request->input('title.en'))
@@ -53,6 +68,7 @@ class ArticleController extends Controller
             'ar' => $request->input('meta_title.ar'),
             'en' => $request->input('meta_title.en')
         ];
+
         $data['meta_description'] = [
             'ar' => $request->input('meta_description.ar'),
             'en' => $request->input('meta_description.en')
@@ -107,6 +123,19 @@ class ArticleController extends Controller
 
         $data = $request->except(['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file']);
 
+        $sanitizerConfig = (new HtmlSanitizerConfig())
+            ->allowSafeElements()
+            ->allowElement('img', ['src', 'alt', 'title', 'width', 'height', 'style'])
+            ->allowElement('a', ['href', 'title', 'target', 'rel'])
+            ->allowAttribute('style', '*');
+
+        $sanitizer = new HtmlSanitizer($sanitizerConfig);
+
+        $data['description'] = [
+            'ar' => $sanitizer->sanitize($request->input('description.ar')),
+            'en' => $sanitizer->sanitize($request->input('description.en')),
+        ];
+
         $data['slug'] = [
             'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
             'en' => Str::slug($request->input('title.en'))
@@ -123,11 +152,11 @@ class ArticleController extends Controller
         ];
 
         $files = ['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file'];
-        $folder = 'articles/files';
 
         foreach ($files as $fileKey) {
             if ($request->hasFile($fileKey)) {
                 if ($article->$fileKey) delete_file($article->$fileKey);
+
                 $path = 'articles/files';
                 if ($fileKey == 'image') $path = 'articles/images';
                 if ($fileKey == 'meta_image') $path = 'articles/images/meta';
@@ -144,12 +173,14 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         if ($article->image) delete_file($article->image);
+        if ($article->meta_image) delete_file($article->meta_image);
         if ($article->white_papers_file) delete_file($article->white_papers_file);
         if ($article->published_researches_file) delete_file($article->published_researches_file);
         if ($article->executive_briefs_file) delete_file($article->executive_briefs_file);
         if ($article->chronological_archive_file) delete_file($article->chronological_archive_file);
 
         $article->delete();
+
         return back()->with('success', 'تم الحذف بنجاح!');
     }
 }

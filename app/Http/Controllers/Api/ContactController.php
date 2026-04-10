@@ -8,6 +8,8 @@ use App\Models\ContactType;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
 
 class ContactController extends Controller
 {
@@ -34,7 +36,17 @@ class ContactController extends Controller
             'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
         ]);
 
+        $sanitizerConfig = (new HtmlSanitizerConfig())
+            ->allowSafeElements()
+            ->allowElement('a', ['href', 'title', 'target', 'rel'])
+            ->allowAttribute('style', '*');
+
+        $sanitizer = new HtmlSanitizer($sanitizerConfig);
+
         $data = $request->except('attachment', 'extra_key');
+
+        $data['name'] = strip_tags($request->input('name'));
+        $data['message'] = $sanitizer->sanitize($request->input('message'));
 
         if ($request->hasFile('attachment')) {
             $data['attachment'] = upload_file($request->file('attachment'), 'contacts_attachments');
@@ -43,6 +55,5 @@ class ContactController extends Controller
         Contact::create($data);
 
         return $this->responseMessage(201, true, 'تم إرسال رسالتك بنجاح، سنتواصل معك قريباً.');
-
     }
 }
