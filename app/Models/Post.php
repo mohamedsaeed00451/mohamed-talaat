@@ -21,6 +21,7 @@ class Post extends Model
         'auto_publish' => 'boolean',
         'social_published' => 'boolean',
         'published_at' => 'datetime',
+        'social_platforms' => 'array',
     ];
 
     public function category()

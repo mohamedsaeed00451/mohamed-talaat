@@ -34,9 +34,17 @@ class DashboardController extends Controller
             'old' => Post::where('is_old', true)->count(),
         ];
 
+        $socialStats = [
+            'facebook' => Post::where('is_active', true)->where('social_published', true)->whereJsonContains('social_platforms', 'facebook')->count(),
+            'twitter' => Post::where('is_active', true)->where('social_published', true)->whereJsonContains('social_platforms', 'twitter')->count(),
+            'linkedin' => Post::where('is_active', true)->where('social_published', true)->whereJsonContains('social_platforms', 'linkedin')->count(),
+            'instagram' => Post::where('is_active', true)->where('social_published', true)->whereJsonContains('social_platforms', 'instagram')->count(),
+        ];
+
         return view('admin.dashboard', compact(
             'articlesCount',
             'postsStats',
+            'socialStats',
             'vaultFilesCount',
             'galleriesCount',
             'podcastsCount',

@@ -44,13 +44,16 @@ class PostController extends Controller
             'meta_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'publish_type' => 'required|in:now,schedule',
             'published_at' => 'nullable|required_if:publish_type,schedule|date',
+            'social_platforms' => 'nullable|array',
+            'social_platforms.*' => 'in:facebook,twitter,instagram,linkedin',
         ]);
 
         $data = $request->except(['image', 'meta_image', 'attachment_file', 'publish_type']);
         $data['is_active'] = $request->has('is_active');
         $data['is_featured'] = $request->has('is_featured');
         $data['is_old'] = $request->has('is_old');
-        $data['auto_publish'] = $request->has('auto_publish');
+        $data['social_platforms'] = $request->input('social_platforms', []);
+        $data['auto_publish'] = count($data['social_platforms']) > 0;
         $data['slug'] = [
             'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
             'en' => Str::slug($request->input('title.en'))
@@ -86,6 +89,7 @@ class PostController extends Controller
                     'content' => strip_tags($post->description['ar']),
                     'url' => $postUrl,
                     'image_url' => $imageUrl,
+                    'platforms' => $post->social_platforms,
                 ]);
 
                 $post->update(['social_published' => true]);
@@ -125,13 +129,16 @@ class PostController extends Controller
             'meta_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'publish_type' => 'required|in:now,schedule',
             'published_at' => 'nullable|required_if:publish_type,schedule|date',
+            'social_platforms' => 'nullable|array',
+            'social_platforms.*' => 'in:facebook,twitter,instagram,linkedin',
         ]);
 
         $data = $request->except(['image', 'meta_image', 'attachment_file', 'publish_type']);
         $data['is_active'] = $request->has('is_active');
         $data['is_featured'] = $request->has('is_featured');
         $data['is_old'] = $request->has('is_old');
-        $data['auto_publish'] = $request->has('auto_publish');
+        $data['social_platforms'] = $request->input('social_platforms', []);
+        $data['auto_publish'] = count($data['social_platforms']) > 0;
         $data['slug'] = [
             'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
             'en' => Str::slug($request->input('title.en'))
@@ -173,6 +180,7 @@ class PostController extends Controller
                     'content' => strip_tags($post->description['ar']),
                     'url' => $postUrl,
                     'image_url' => $imageUrl,
+                    'platforms' => $post->social_platforms,
                 ]);
 
                 $post->update(['social_published' => true]);

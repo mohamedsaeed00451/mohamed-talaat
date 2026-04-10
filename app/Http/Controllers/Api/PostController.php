@@ -13,8 +13,10 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
-
-        $query = Post::with('category')->where('is_active',1)->latest();
+        $query = Post::with('category')
+            ->where('is_active', 1)
+            ->where('published_at', '<=', now())
+            ->orderBy('published_at', 'desc');
 
         if ($request->has('category_slug') && $request->category_slug != null) {
             $slug = $request->category_slug;
@@ -36,12 +38,16 @@ class PostController extends Controller
     public function show($slug)
     {
         $post = Post::with('category')
-            ->where('slug->ar', $slug)
-            ->orWhere('slug->en', $slug)
+            ->where('is_active', 1)
+            ->where('published_at', '<=', now())
+            ->where(function ($query) use ($slug) {
+                $query->where('slug->ar', $slug)
+                    ->orWhere('slug->en', $slug);
+            })
             ->first();
 
         if (!$post) {
-            return $this->responseMessage(404, false, 'المقال غير موجود');
+            return $this->responseMessage(404, false, 'المقال غير موجود أو لم يتم نشره بعد');
         }
 
         return $this->responseMessage(200, true, 'تفاصيل المقال', $this->formatPost($post));
@@ -62,14 +68,20 @@ class PostController extends Controller
             'strategic_brief' => $post->strategic_brief,
             'url' => $post->url,
 
+            'is_featured' => (bool)$post->is_featured,
+            'is_old' => (bool)$post->is_old,
+
+            'social_platforms' => $post->social_platforms ?? [],
+
+            'published_at' => $post->published_at ? $post->published_at->format('Y-m-d h:i A') : null,
+            'created_at' => $post->created_at->format('Y-m-d'),
+
             'image_url' => $post->image ? asset($post->image) : null,
             'attachment_url' => $post->attachment_file ? asset($post->attachment_file) : null,
             'meta_image_url' => $post->meta_image ? asset($post->meta_image) : null,
 
             'meta_title' => $post->meta_title,
             'meta_description' => $post->meta_description,
-
-            'created_at' => $post->created_at->format('Y-m-d'),
         ];
     }
 }
