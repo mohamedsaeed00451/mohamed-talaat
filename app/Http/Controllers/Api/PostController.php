@@ -15,8 +15,7 @@ class PostController extends Controller
     {
         $query = Post::with('category')
             ->where('is_active', 1)
-            ->where('published_at', '<=', now())
-            ->orderBy('published_at', 'desc');
+            ->orderBy('id', 'desc');
 
         if ($request->filled('category_slug')) {
             $slug = $request->category_slug;

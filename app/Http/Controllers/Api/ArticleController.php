@@ -15,8 +15,7 @@ class ArticleController extends Controller
     {
         $query = Article::with('type')
             ->where('is_active', 1)
-            ->where('published_at', '<=', now())
-            ->orderBy('published_at', 'desc');
+            ->orderBy('id', 'desc');
 
         if ($request->filled('type_slug')) {
             $slug = $request->type_slug;
