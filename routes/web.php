@@ -60,6 +60,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('article-types', ArticleTypeController::class)->except(['create', 'show', 'edit']);
 
+        Route::post('/articles/{article}/toggle', [ArticleController::class, 'toggleStatus'])->name('articles.toggle');
         Route::resource('articles', ArticleController::class)->except(['show']);
 
         Route::resource('galleries', GalleryController::class)->except(['show']);

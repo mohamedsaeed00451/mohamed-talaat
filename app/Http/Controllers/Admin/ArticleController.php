@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
@@ -42,9 +44,13 @@ class ArticleController extends Controller
             'meta_description.ar' => 'nullable|string',
             'meta_description.en' => 'nullable|string',
             'meta_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'publish_type' => 'required|in:now,schedule',
+            'published_at' => 'nullable|required_if:publish_type,schedule|date',
+            'social_platforms' => 'nullable|array',
+            'social_platforms.*' => 'in:facebook,twitter,instagram,linkedin',
         ]);
 
-        $data = $request->except(['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file']);
+        $data = $request->except(['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file', 'publish_type']);
 
         $sanitizerConfig = (new HtmlSanitizerConfig())
             ->allowSafeElements()
@@ -59,10 +65,22 @@ class ArticleController extends Controller
             'en' => $sanitizer->sanitize($request->input('description.en')),
         ];
 
+        $data['is_active'] = $request->has('is_active');
+        $data['is_featured'] = $request->has('is_featured');
+        $data['is_old'] = $request->has('is_old');
+        $data['social_platforms'] = $request->input('social_platforms', []);
+        $data['auto_publish'] = count($data['social_platforms']) > 0;
+
         $data['slug'] = [
             'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
             'en' => Str::slug($request->input('title.en'))
         ];
+
+        if ($request->publish_type == 'now') {
+            $data['published_at'] = now();
+        } else {
+            $data['published_at'] = $request->published_at;
+        }
 
         $data['meta_title'] = [
             'ar' => $request->input('meta_title.ar'),
@@ -90,9 +108,36 @@ class ArticleController extends Controller
             $data['chronological_archive_file'] = upload_file($request->file('chronological_archive_file'), 'articles/files');
         }
 
-        Article::create($data);
+        $article = Article::create($data);
 
-        return redirect()->route('admin.articles.index')->with('success', 'تم إضافة المقال بنجاح!');
+        if ($article->auto_publish && $article->published_at <= now()) {
+            try {
+                $articleUrl = config('app.web_site_url') . '/articles/' . $article->slug['ar'];
+
+                if (app()->environment('local')) {
+                    $imageUrl = 'https://picsum.photos/800/600';
+                } else {
+                    $imageUrl = $article->image ? asset($article->image) : null;
+                }
+
+                $webhookUrl = config('app.webhook_url');
+
+                Http::timeout(5)->post($webhookUrl, [
+                    'title' => $article->title['ar'],
+                    'content' => strip_tags($article->description['ar']),
+                    'url' => $articleUrl,
+                    'image_url' => $imageUrl,
+                    'platforms' => $article->social_platforms,
+                ]);
+
+                $article->update(['social_published' => true]);
+
+            } catch (\Exception $e) {
+                Log::error('Webhook Error: ' . $e->getMessage());
+            }
+        }
+
+        return redirect()->route('admin.articles.index')->with('success', 'تم إضافة التحليل بنجاح!');
     }
 
     public function edit(Article $article)
@@ -119,9 +164,13 @@ class ArticleController extends Controller
             'meta_description.ar' => 'nullable|string',
             'meta_description.en' => 'nullable|string',
             'meta_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'publish_type' => 'required|in:now,schedule',
+            'published_at' => 'nullable|required_if:publish_type,schedule|date',
+            'social_platforms' => 'nullable|array',
+            'social_platforms.*' => 'in:facebook,twitter,instagram,linkedin',
         ]);
 
-        $data = $request->except(['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file']);
+        $data = $request->except(['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file', 'publish_type']);
 
         $sanitizerConfig = (new HtmlSanitizerConfig())
             ->allowSafeElements()
@@ -136,10 +185,22 @@ class ArticleController extends Controller
             'en' => $sanitizer->sanitize($request->input('description.en')),
         ];
 
+        $data['is_active'] = $request->has('is_active');
+        $data['is_featured'] = $request->has('is_featured');
+        $data['is_old'] = $request->has('is_old');
+        $data['social_platforms'] = $request->input('social_platforms', []);
+        $data['auto_publish'] = count($data['social_platforms']) > 0;
+
         $data['slug'] = [
             'ar' => preg_replace('/\s+/u', '-', trim($request->input('title.ar'))),
             'en' => Str::slug($request->input('title.en'))
         ];
+
+        if ($request->publish_type == 'now') {
+            $data['published_at'] = now();
+        } else {
+            $data['published_at'] = $request->published_at;
+        }
 
         $data['meta_title'] = [
             'ar' => $request->input('meta_title.ar'),
@@ -167,7 +228,34 @@ class ArticleController extends Controller
 
         $article->update($data);
 
-        return redirect()->route('admin.articles.index')->with('success', 'تم تعديل المقال بنجاح!');
+        if ($article->auto_publish && $article->published_at <= now()) {
+            try {
+                $articleUrl = config('app.web_site_url') . '/articles/' . $article->slug['ar'];
+
+                if (app()->environment('local')) {
+                    $imageUrl = 'https://picsum.photos/800/600';
+                } else {
+                    $imageUrl = $article->image ? asset($article->image) : null;
+                }
+
+                $webhookUrl = config('app.webhook_url');
+
+                Http::timeout(5)->post($webhookUrl, [
+                    'title' => $article->title['ar'],
+                    'content' => strip_tags($article->description['ar']),
+                    'url' => $articleUrl,
+                    'image_url' => $imageUrl,
+                    'platforms' => $article->social_platforms,
+                ]);
+
+                $article->update(['social_published' => true]);
+
+            } catch (\Exception $e) {
+                Log::error('Webhook Error: ' . $e->getMessage());
+            }
+        }
+
+        return redirect()->route('admin.articles.index')->with('success', 'تم تعديل التحليل بنجاح!');
     }
 
     public function destroy(Article $article)
@@ -182,5 +270,19 @@ class ArticleController extends Controller
         $article->delete();
 
         return back()->with('success', 'تم الحذف بنجاح!');
+    }
+
+    public function toggleStatus(Request $request, Article $article)
+    {
+        $request->validate([
+            'field' => 'required|in:is_active,is_featured,is_old',
+            'state' => 'required|boolean'
+        ]);
+
+        $article->update([
+            $request->field => $request->state
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'تم التحديث بنجاح']);
     }
 }

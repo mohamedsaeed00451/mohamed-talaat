@@ -155,7 +155,7 @@
 
                 <a href="{{ route('admin.articles.index') }}" class="flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all {{ request()->routeIs('admin.articles.*') ? 'bg-white/10 text-white font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5 font-semibold' }}">
                     <div class="w-1.5 h-1.5 rounded-full {{ request()->routeIs('admin.articles.*') ? 'bg-indigo-500 shadow-[0_0_8px_#6366f1]' : 'bg-gray-600' }}"></div>
-                    <span class="text-sm">كل المقالات</span>
+                    <span class="text-sm">كل التحليلات</span>
                 </a>
 
             </div>

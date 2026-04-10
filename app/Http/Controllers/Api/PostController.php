@@ -18,12 +18,20 @@ class PostController extends Controller
             ->where('published_at', '<=', now())
             ->orderBy('published_at', 'desc');
 
-        if ($request->has('category_slug') && $request->category_slug != null) {
+        if ($request->filled('category_slug')) {
             $slug = $request->category_slug;
             $query->whereHas('category', function ($q) use ($slug) {
                 $q->where('slug->ar', $slug)
                     ->orWhere('slug->en', $slug);
             });
+        }
+
+        if ($request->filled('is_featured')) {
+            $query->where('is_featured', $request->boolean('is_featured'));
+        }
+
+        if ($request->filled('is_old')) {
+            $query->where('is_old', $request->boolean('is_old'));
         }
 
         $posts = $query->paginate(10);

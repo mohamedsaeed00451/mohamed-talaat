@@ -14,6 +14,13 @@ class Article extends Model
         'meta_title' => 'array',
         'meta_description' => 'array',
         'slug' => 'array',
+        'is_active' => 'boolean',
+        'is_featured' => 'boolean',
+        'is_old' => 'boolean',
+        'auto_publish' => 'boolean',
+        'social_published' => 'boolean',
+        'published_at' => 'datetime',
+        'social_platforms' => 'array',
     ];
 
     public function type()
