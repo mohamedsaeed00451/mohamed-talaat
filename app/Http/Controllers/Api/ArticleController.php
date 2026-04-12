@@ -88,10 +88,11 @@ class ArticleController extends Controller
             'meta_description' => $article->meta_description,
 
             'attachments' => [
-                'white_papers' => $article->white_papers_file ? asset($article->white_papers_file) : null,
-                'published_researches' => $article->published_researches_file ? asset($article->published_researches_file) : null,
-                'executive_briefs' => $article->executive_briefs_file ? asset($article->executive_briefs_file) : null,
-                'chronological_archive' => $article->chronological_archive_file ? asset($article->chronological_archive_file) : null,
+                'policy_paper' => $article->policy_paper_file ? asset($article->policy_paper_file) : null,
+                'strategic_fact_sheets' => $article->strategic_fact_sheets_file ? asset($article->strategic_fact_sheets_file) : null,
+                'strategic_brief' => $article->strategic_brief_file ? asset($article->strategic_brief_file) : null,
+                'analytical_infographic' => $article->analytical_infographic_file ? asset($article->analytical_infographic_file) : null,
+                'analytical_article' => $article->analytical_article_file ? asset($article->analytical_article_file) : null,
             ],
         ];
     }

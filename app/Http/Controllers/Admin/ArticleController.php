@@ -35,10 +35,11 @@ class ArticleController extends Controller
             'description.ar' => 'required|string',
             'description.en' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'white_papers_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'published_researches_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'executive_briefs_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'chronological_archive_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'policy_paper_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'strategic_fact_sheets_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'strategic_brief_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'analytical_infographic_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'analytical_article_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
             'meta_title.ar' => 'nullable|string|max:255',
             'meta_title.en' => 'nullable|string|max:255',
             'meta_description.ar' => 'nullable|string',
@@ -50,7 +51,7 @@ class ArticleController extends Controller
             'social_platforms.*' => 'in:facebook,twitter,instagram,linkedin',
         ]);
 
-        $data = $request->except(['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file', 'publish_type']);
+        $data = $request->except(['image', 'meta_image', 'policy_paper_file', 'strategic_fact_sheets_file', 'strategic_brief_file', 'analytical_infographic_file', 'analytical_article_file', 'publish_type']);
 
         $sanitizerConfig = (new HtmlSanitizerConfig())
             ->allowSafeElements()
@@ -95,17 +96,20 @@ class ArticleController extends Controller
         if ($request->hasFile('image')) $data['image'] = upload_file($request->file('image'), 'articles/images');
         if ($request->hasFile('meta_image')) $data['meta_image'] = upload_file($request->file('meta_image'), 'articles/images/meta');
 
-        if ($request->hasFile('white_papers_file')) {
-            $data['white_papers_file'] = upload_file($request->file('white_papers_file'), 'articles/files');
+        if ($request->hasFile('policy_paper_file')) {
+            $data['policy_paper_file'] = upload_file($request->file('policy_paper_file'), 'articles/files');
         }
-        if ($request->hasFile('published_researches_file')) {
-            $data['published_researches_file'] = upload_file($request->file('published_researches_file'), 'articles/files');
+        if ($request->hasFile('strategic_fact_sheets_file')) {
+            $data['strategic_fact_sheets_file'] = upload_file($request->file('strategic_fact_sheets_file'), 'articles/files');
         }
-        if ($request->hasFile('executive_briefs_file')) {
-            $data['executive_briefs_file'] = upload_file($request->file('executive_briefs_file'), 'articles/files');
+        if ($request->hasFile('strategic_brief_file')) {
+            $data['strategic_brief_file'] = upload_file($request->file('strategic_brief_file'), 'articles/files');
         }
-        if ($request->hasFile('chronological_archive_file')) {
-            $data['chronological_archive_file'] = upload_file($request->file('chronological_archive_file'), 'articles/files');
+        if ($request->hasFile('analytical_infographic_file')) {
+            $data['analytical_infographic_file'] = upload_file($request->file('analytical_infographic_file'), 'articles/files');
+        }
+        if ($request->hasFile('analytical_article_file')) {
+            $data['analytical_article_file'] = upload_file($request->file('analytical_article_file'), 'articles/files');
         }
 
         $article = Article::create($data);
@@ -155,10 +159,11 @@ class ArticleController extends Controller
             'description.ar' => 'required|string',
             'description.en' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'white_papers_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'published_researches_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'executive_briefs_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'chronological_archive_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'policy_paper_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'strategic_fact_sheets_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'strategic_brief_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'analytical_infographic_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'analytical_article_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
             'meta_title.ar' => 'nullable|string|max:255',
             'meta_title.en' => 'nullable|string|max:255',
             'meta_description.ar' => 'nullable|string',
@@ -170,7 +175,7 @@ class ArticleController extends Controller
             'social_platforms.*' => 'in:facebook,twitter,instagram,linkedin',
         ]);
 
-        $data = $request->except(['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file', 'publish_type']);
+        $data = $request->except(['image', 'meta_image', 'policy_paper_file', 'strategic_fact_sheets_file', 'strategic_brief_file', 'analytical_infographic_file', 'analytical_article_file', 'publish_type']);
 
         $sanitizerConfig = (new HtmlSanitizerConfig())
             ->allowSafeElements()
@@ -212,7 +217,7 @@ class ArticleController extends Controller
             'en' => $request->input('meta_description.en')
         ];
 
-        $files = ['image', 'meta_image', 'white_papers_file', 'published_researches_file', 'executive_briefs_file', 'chronological_archive_file'];
+        $files = ['image', 'meta_image', 'policy_paper_file', 'strategic_fact_sheets_file', 'strategic_brief_file', 'analytical_infographic_file', 'analytical_article_file'];
 
         foreach ($files as $fileKey) {
             if ($request->hasFile($fileKey)) {
@@ -262,10 +267,11 @@ class ArticleController extends Controller
     {
         if ($article->image) delete_file($article->image);
         if ($article->meta_image) delete_file($article->meta_image);
-        if ($article->white_papers_file) delete_file($article->white_papers_file);
-        if ($article->published_researches_file) delete_file($article->published_researches_file);
-        if ($article->executive_briefs_file) delete_file($article->executive_briefs_file);
-        if ($article->chronological_archive_file) delete_file($article->chronological_archive_file);
+        if ($article->policy_paper_file) delete_file($article->policy_paper_file);
+        if ($article->strategic_fact_sheets_file) delete_file($article->strategic_fact_sheets_file);
+        if ($article->strategic_brief_file) delete_file($article->strategic_brief_file);
+        if ($article->analytical_infographic_file) delete_file($article->analytical_infographic_file);
+        if ($article->analytical_article_file) delete_file($article->analytical_article_file);
 
         $article->delete();
 

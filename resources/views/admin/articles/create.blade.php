@@ -61,23 +61,28 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <label class="block text-sm font-black text-gray-800 mb-2">📄 الأوراق البيضاء (White Papers)</label>
-                        <input type="file" name="white_papers_file" accept=".pdf,.doc,.docx" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
+                        <label class="block text-sm font-black text-gray-800 mb-2">📄 ورقة سياسات (Policy Paper)</label>
+                        <input type="file" name="policy_paper_file" accept=".pdf,.doc,.docx" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
                     </div>
 
                     <div class="space-y-2 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <label class="block text-sm font-black text-gray-800 mb-2">📚 الأبحاث المنشورة (Published Researches)</label>
-                        <input type="file" name="published_researches_file" accept=".pdf,.doc,.docx" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
+                        <label class="block text-sm font-black text-gray-800 mb-2">📚 بطاقات التعريف الاستراتيجية (Strategic Fact Sheets)</label>
+                        <input type="file" name="strategic_fact_sheets_file" accept=".pdf,.doc,.docx" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
                     </div>
 
                     <div class="space-y-2 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <label class="block text-sm font-black text-gray-800 mb-2">💼 الإيجازات التنفيذية (Executive Briefs)</label>
-                        <input type="file" name="executive_briefs_file" accept=".pdf,.doc,.docx" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
+                        <label class="block text-sm font-black text-gray-800 mb-2">💼 إيجاز استراتيجي (Strategic Brief)</label>
+                        <input type="file" name="strategic_brief_file" accept=".pdf,.doc,.docx" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
                     </div>
 
                     <div class="space-y-2 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <label class="block text-sm font-black text-gray-800 mb-2">⏳ الأرشيف الزمني (Chronological Archive)</label>
-                        <input type="file" name="chronological_archive_file" accept=".pdf,.doc,.docx" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
+                        <label class="block text-sm font-black text-gray-800 mb-2">⏳ الإنفوجرافيك التحليلي (Analytical Infographic)</label>
+                        <input type="file" name="analytical_infographic_file" accept=".pdf,.doc,.docx" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
+                    </div>
+
+                    <div class="space-y-2 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                        <label class="block text-sm font-black text-gray-800 mb-2">📝 المقال التحليلي (Analytical Article)</label>
+                        <input type="file" name="analytical_article_file" accept=".pdf,.doc,.docx" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
                     </div>
                 </div>
             </div>
@@ -225,7 +230,7 @@
                 </div>
             </div>
             <div class="pt-6 border-t border-gray-50 flex justify-end">
-                <button type="submit" :disabled="isSubmitting" class="flex items-center justify-center gap-2 px-10 py-4 bg-primary text-white rounded-xl font-black shadow-lg shadow-primary/30 transition-all disabled:opacity-70">
+                <button type="submit" :disabled="isSubmitting" class="cursor-pointer flex items-center justify-center gap-2 px-10 py-4 bg-primary text-white rounded-xl font-black shadow-lg shadow-primary/30 transition-all disabled:opacity-70">
                     <span x-show="!isSubmitting">حفظ المقال</span>
                     <span x-show="isSubmitting" style="display:none;">جاري الحفظ والرفع...</span>
                 </button>
