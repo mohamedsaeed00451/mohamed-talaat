@@ -38,7 +38,7 @@
             <div class="flex justify-start">
                 <div
                     class="bg-white text-gray-800 px-4 py-3 rounded-2xl rounded-tr-none shadow-sm border border-gray-100 max-w-[85%] text-sm font-semibold leading-relaxed">
-                    أهلاً بيك يا فندم! أنا طلعت المساعد الذكي، أقدر أساعدك إزاي النهاردة؟
+                    حياك الله طال عمرك! آنه «طلعت» المساعد الذكي، بشنو أقدر أساعدك اليوم؟
                 </div>
             </div>
 
