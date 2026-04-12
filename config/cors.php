@@ -19,7 +19,15 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => env('APP_ENV') === 'production' ? [env('FRONTEND_URL', 'https://dr-moahmed-tallat.vercel.app')] : ['*'],
+    'allowed_origins' => env('APP_ENV') === 'production'
+        ? [
+            'https://mohamedtalat.com',
+            'https://www.mohamedtalat.com',
+            'https://mohamedtalat.org',
+            'https://www.mohamedtalat.org',
+            env('FRONTEND_URL', 'https://dr-moahmed-tallat.vercel.app')
+        ]
+        : ['*'],
 
     'allowed_origins_patterns' => [],
 
