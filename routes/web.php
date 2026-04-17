@@ -60,6 +60,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('article-types', ArticleTypeController::class)->except(['create', 'show', 'edit']);
 
+        Route::get('/articles/bulk-ai', [ArticleController::class, 'bulkAiCreate'])->name('articles.bulk-ai');
+        Route::post('/articles/bulk-process', [ArticleController::class, 'bulkProcessSingle'])->name('articles.bulk-process');
         Route::post('/articles/{article}/toggle', [ArticleController::class, 'toggleStatus'])->name('articles.toggle');
         Route::resource('articles', ArticleController::class)->except(['show']);
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ChatBot;
 
 use App\Http\Controllers\Controller;
+use App\Models\Article;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -82,6 +83,65 @@ class ChatbotController extends Controller
                 null,
                 $e->getMessage()
             );
+        }
+    }
+
+    public function askAboutArticle(Request $request, $id)
+    {
+        $request->validate([
+            'message' => 'required|string',
+            'history' => 'nullable|array'
+        ]);
+
+        $article = Article::findOrFail($id);
+
+        $userMessage = $request->input('message');
+        $history = $request->input('history', []);
+
+        $articleContext = "Title: " . ($article->title['ar'] ?? '') . "\n";
+        $articleContext .= "Thesis: " . ($article->description['ar'] ?? '') . "\n";
+        $articleContext .= "Body: " . ($article->article_body['ar'] ?? '') . "\n";
+        $articleContext .= "Concepts: " . ($article->central_concepts['ar'] ?? '') . "\n";
+        $articleContext .= "Summary: " . ($article->sovereign_summary['ar'] ?? '') . "\n";
+
+        $systemPrompt = <<<EOT
+        You are 'Talat AI', a highly intelligent assistant for the 'Mohamed Talat' platform.
+        You speak in a professional, friendly Bahraini Arabic dialect (e.g., يا هلا، طال عمرك).
+        Your current task is to answer user questions strictly based on the provided Article Context.
+        If the user asks something outside the scope of this article, politely apologize and state that you are currently assisting them with this specific article. Do not invent facts outside the provided text. Keep answers concise, insightful, and strategic.
+
+        --- Article Context ---
+        {$articleContext}
+        EOT;
+
+        $messages = [
+            ['role' => 'system', 'content' => $systemPrompt]
+        ];
+
+        foreach ($history as $msg) {
+            $messages[] = [
+                'role' => $msg['role'] === 'user' ? 'user' : 'assistant',
+                'content' => $msg['content']
+            ];
+        }
+
+        $messages[] = ['role' => 'user', 'content' => $userMessage];
+
+        try {
+            $response = OpenAI::chat()->create([
+                'model' => 'gpt-4o-mini',
+                'messages' => $messages,
+                'max_tokens' => 300,
+                'temperature' => 0.3
+            ]);
+
+            $reply = $response->choices[0]->message->content;
+
+            return $this->responseMessage(200, true, 'Success', ['reply' => $reply]);
+
+        } catch (\Exception $e) {
+            Log::error('OpenAI Article Chat Error: ' . $e->getMessage());
+            return $this->responseMessage(500, false, 'عذراً طال عمرك، أواجه مشكلة تقنية حالياً. يرجى المحاولة بعد قليل.');
         }
     }
 }

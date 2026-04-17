@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\SettingController;
 
 Route::post('/chat', [ChatbotController::class, 'chat']);
+Route::post('/articles/{id}/ask-ai', [ChatbotController::class, 'askAboutArticle']);
 
 Route::middleware([ApiKeyMiddleware::class, ForceJsonResponseMiddleware::class])->group(function () {
 
