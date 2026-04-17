@@ -15,7 +15,8 @@ class ArticleController extends Controller
     {
         $query = Article::with('type')
             ->where('is_active', 1)
-            ->orderBy('id', 'desc');
+            ->where('published_at', '<=', now())
+            ->orderBy('published_at', 'desc');
 
         if ($request->filled('type_slug')) {
             $slug = $request->type_slug;
@@ -69,9 +70,20 @@ class ArticleController extends Controller
                 'name' => $article->type->name ?? null,
                 'slug' => $article->type->slug ?? null,
             ],
+
             'title' => $article->title,
+            'subtitle' => $article->subtitle,
             'slug' => $article->slug,
+
             'description' => $article->description,
+            'article_body' => $article->article_body,
+            'central_concepts' => $article->central_concepts,
+            'analytical_mechanism' => $article->analytical_mechanism,
+            'why_it_matters' => $article->why_it_matters,
+            'related_materials' => $article->related_materials,
+            'talat_ai_questions' => $article->talat_ai_questions,
+            'sovereign_summary' => $article->sovereign_summary,
+            'publishing_data_tags' => $article->publishing_data_tags,
 
             'is_featured' => (bool)$article->is_featured,
             'is_old' => (bool)$article->is_old,
@@ -88,11 +100,8 @@ class ArticleController extends Controller
             'meta_description' => $article->meta_description,
 
             'attachments' => [
-                'policy_paper' => $article->policy_paper_file ? asset($article->policy_paper_file) : null,
-                'strategic_fact_sheets' => $article->strategic_fact_sheets_file ? asset($article->strategic_fact_sheets_file) : null,
-                'strategic_brief' => $article->strategic_brief_file ? asset($article->strategic_brief_file) : null,
-                'analytical_infographic' => $article->analytical_infographic_file ? asset($article->analytical_infographic_file) : null,
-                'analytical_article' => $article->analytical_article_file ? asset($article->analytical_article_file) : null,
+                'infographic_design' => $article->infographic_design_file ? asset($article->infographic_design_file) : null,
+                'interactive_infographic' => $article->interactive_infographic_file ? asset($article->interactive_infographic_file) : null,
             ],
         ];
     }

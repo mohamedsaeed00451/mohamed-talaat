@@ -10,7 +10,17 @@ class Article extends Model
 
     protected $casts = [
         'title' => 'array',
+        'subtitle' => 'array',
         'description' => 'array',
+        'article_body' => 'array',
+        'central_concepts' => 'array',
+        'analytical_mechanism' => 'array',
+        'why_it_matters' => 'array',
+        'related_materials' => 'array',
+        'talat_ai_questions' => 'array',
+        'sovereign_summary' => 'array',
+        'publishing_data_tags' => 'array',
+
         'meta_title' => 'array',
         'meta_description' => 'array',
         'slug' => 'array',
