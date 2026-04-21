@@ -218,52 +218,54 @@ class ArticleController extends Controller
     private function getAiPromptSchema()
     {
         return [
-            "task" => "You are an expert strategic content analyzer. Extract data STRICTLY from the provided content.",
-            "CRITICAL_INSTRUCTION" => "If the provided content is garbled, unreadable, mostly random symbols, or empty (which happens with scanned PDFs), DO NOT invent, guess, or hallucinate any data. You MUST set the title to 'الملف غير مقروء - يرجى رفعه كصورة' and leave ALL other fields empty or null.",
+            "task" => "You are an expert strategic content analyzer and data extractor. You are analyzing a document (newspaper page, magazine, or document) that may contain multiple articles.",
+            "CRITICAL_INSTRUCTION_1" => "Your STRICT MISSION is to scan the entire content and ONLY extract the article written by or explicitly mentioning the name 'محمد طلعت عبدالعزيز'. Ignore all other articles, authors, and unrelated news.",
+            "CRITICAL_INSTRUCTION_2" => "If the name 'محمد طلعت عبدالعزيز' is NOT found ANYWHERE, set the title to 'مقال غير مطابق' and leave ALL other fields empty. DO NOT hallucinate.",
+            "CRITICAL_INSTRUCTION_3" => "If the article is found, provide a VERY RICH, COMPREHENSIVE, and DETAILED extraction. Do not summarize too briefly; extract as much relevant detail, arguments, and context as possible from that specific article.",
             "expected_json_format" => [
                 "title" => [
-                    "ar" => "<استخرج العنوان الرئيسي هنا بالعربية>",
-                    "en" => "<Extract the main title here in English>"
+                    "ar" => "<استخرج العنوان الرئيسي للمقال بدقة>",
+                    "en" => "<Extract the exact main title>"
                 ],
                 "subtitle" => [
-                    "ar" => "<استخرج العنوان الفرعي هنا بالعربية>",
-                    "en" => "<Extract the subtitle here in English>"
+                    "ar" => "<استخرج العنوان الفرعي إن وجد، أو اكتب مقدمة قصيرة>",
+                    "en" => "<Extract subtitle or short intro>"
                 ],
                 "description" => [
-                    "ar" => "<اكتب الأطروحة المركزية للمقال هنا بالعربية>",
-                    "en" => "<Write the central thesis here in English>"
+                    "ar" => "<اكتب فقرة دسمة وتفصيلية تشرح الأطروحة المركزية والهدف الأساسي من المقال>",
+                    "en" => "<Write a rich, detailed paragraph explaining the central thesis>"
                 ],
                 "article_body" => [
-                    "ar" => "<اكتب متن المقال أو ملخص شامل هنا بالعربية>",
-                    "en" => "<Write the coherent body text or summary here in English>"
+                    "ar" => "<استخرج متن المقال بشكل شامل ومفصل، أو اكتب ملخصاً وافياً جداً يغطي كافة النقاط والأفكار المذكورة دون اختصار مخل>",
+                    "en" => "<Provide a very comprehensive summary or full extraction of the article body covering all main points>"
                 ],
                 "central_concepts" => [
-                    "ar" => "<اذكر المفاهيم المركزية المذكورة في النص هنا بالعربية>",
-                    "en" => "<List the main concepts discussed here in English>"
+                    "ar" => "<اذكر جميع المفاهيم المركزية والاستراتيجية المذكورة واشرح كل منها بإيجاز>",
+                    "en" => "<List and briefly explain all central concepts mentioned>"
                 ],
                 "analytical_mechanism" => [
-                    "ar" => "<اشرح الآلية التحليلية المستخدمة هنا بالعربية>",
-                    "en" => "<Explain the analytical approach used here in English>"
+                    "ar" => "<اشرح بالتفصيل الآلية التحليلية أو المنهجية التي اعتمد عليها الكاتب في طرحه>",
+                    "en" => "<Explain in detail the analytical approach used by the author>"
                 ],
                 "why_it_matters" => [
-                    "ar" => "<اشرح لماذا يهم هذا المقال هنا بالعربية>",
-                    "en" => "<Explain why this article matters here in English>"
+                    "ar" => "<حلل واشرح باستفاضة لماذا يعتبر هذا المقال مهماً وما هي تداعياته>",
+                    "en" => "<Analyze and explain extensively why this article matters>"
                 ],
                 "talat_ai_questions" => [
-                    "ar" => "س: [اكتب سؤال استراتيجي 1]؟\nج: [اكتب الإجابة]\n\nس: [سؤال 2]؟\nج: [إجابة 2]",
-                    "en" => "Q: [Write strategic question 1]?\nA: [Write answer]\n\nQ: [Question 2]?\nA: [Answer 2]"
+                    "ar" => "س: [سؤال استراتيجي عميق 1 مستوحى من النص]؟\nج: [إجابة تفصيلية]\n\nس: [سؤال 2]؟\nج: [إجابة]",
+                    "en" => "Q: [Deep strategic question 1]?\nA: [Detailed answer]\n\nQ: [Question 2]?\nA: [Answer]"
                 ],
                 "sovereign_summary" => [
-                    "ar" => "<اكتب الخلاصة السيادية هنا بالعربية>",
-                    "en" => "<Write the strong concluding summary here in English>"
+                    "ar" => "<اكتب خلاصة سيادية واستنتاجية قوية ومفصلة للمقال>",
+                    "en" => "<Write a strong, detailed concluding summary>"
                 ],
                 "related_materials" => [
-                    "ar" => "<اكتب كلمات مفتاحية مرتبطة بالنص بالعربية>",
-                    "en" => "<Write keywords related to the text in English>"
+                    "ar" => "<كلمات مفتاحية، أسماء شخصيات، أو دول مذكورة في النص>",
+                    "en" => "<Keywords, names, or countries mentioned>"
                 ],
                 "publishing_data_tags" => [
-                    "ar" => "<استخرج أي بيانات نشر أو وسوم موجودة في النص بالعربية>",
-                    "en" => "<Extract any publication data or tags in English>"
+                    "ar" => "<استخرج اسم الجريدة، التاريخ، أو أي بيانات نشر موجودة>",
+                    "en" => "<Extract publication data like newspaper name, date>"
                 ],
                 "meta_title" => [
                     "ar" => "<عنوان جذاب لمحركات البحث (SEO) لا يتجاوز 60 حرفاً بالعربية>",
@@ -326,7 +328,7 @@ class ArticleController extends Controller
                     $base64Image = base64_encode(file_get_contents($tempPath));
                     $visionContent[] = [
                         "type" => "image_url",
-                        "image_url" => ["url" => "data:image/jpeg;base64," . $base64Image]
+                        "image_url" => ["url" => "data:image/jpeg;base64," . $base64Image, "detail" => "auto"]
                     ];
 
                     if (file_exists($tempPath)) {
@@ -369,17 +371,16 @@ class ArticleController extends Controller
 
             $titleAr = trim($aiData['title']['ar'] ?? '');
             $titleEn = trim($aiData['title']['en'] ?? '');
-
-            if (empty($titleAr) || str_contains($titleAr, 'عنوان رئيسي') || str_contains($titleAr, 'غير مقروء')) {
-                $titleAr = $originalFileName;
-            }
-            if (empty($titleEn) || str_contains($titleEn, 'Main Title')) {
-                $titleEn = $originalFileName;
+            if (str_contains($titleAr, 'مقال غير مطابق')) {
+                $titleAr = $originalFileName . ' (تجاهل - لا يوجد اسم محمد طلعت)';
+                $titleEn = $originalFileName . ' (Ignored - Name not found)';
+            } elseif (empty($titleAr) || str_contains($titleAr, 'عنوان رئيسي') || str_contains($titleAr, 'غير مقروء')) {
+                $titleAr = $originalFileName . ' (غير مقروء/طلاسم)';
+                $titleEn = $originalFileName . ' (Unreadable)';
             }
 
             $slugAr = preg_replace('/\s+/u', '-', $titleAr) . '-' . uniqid();
             $slugEn = Str::slug($titleEn) . '-' . uniqid();
-
             Article::create([
                 'article_type_id' => $request->article_type_id,
                 'title' => ['ar' => $titleAr, 'en' => $titleEn],
@@ -418,13 +419,14 @@ class ArticleController extends Controller
 
     private function executeOpenAICall($messages)
     {
-        $response = Http::withToken(env('OPENAI_API_KEY',''))
-            ->timeout(120)
+        $response = Http::withToken(env('OPENAI_API_KEY', ''))
+            ->timeout(180)
             ->post('https://api.openai.com/v1/chat/completions', [
                 "model" => "gpt-4o",
                 "messages" => $messages,
                 "response_format" => ["type" => "json_object"],
-                "temperature" => 0.5
+                "temperature" => 0.4,
+                "max_tokens" => 4096
             ]);
 
         if ($response->successful()) {

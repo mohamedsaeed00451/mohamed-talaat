@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'أنواع المقالات والأبحاث')
+@section('title', 'أنواع التحليلات')
 
 @section('content')
     <div x-data="articleTypeModal()" class="max-w-7xl mx-auto pb-20">
@@ -24,12 +24,13 @@
 
         <div class="bg-white rounded-[2rem] shadow-sm border border-gray-50 overflow-hidden relative">
             <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-right border-collapse table-fixed min-w-[600px]">
+                <table class="w-full text-right border-collapse table-fixed min-w-[800px]">
                     <thead>
                     <tr class="bg-gray-50 border-b border-gray-100">
                         <th class="px-6 py-5 text-xs font-black text-gray-500 uppercase tracking-wider text-center w-16">#</th>
-                        <th class="px-6 py-5 text-xs font-black text-gray-500 uppercase tracking-wider w-1/2">الاسم (عربي)</th>
-                        <th class="px-6 py-5 text-xs font-black text-gray-500 uppercase tracking-wider text-left" dir="ltr">Name (English)</th>
+                        <th class="px-6 py-5 text-xs font-black text-gray-500 uppercase tracking-wider w-1/3">الاسم (عربي)</th>
+                        <th class="px-6 py-5 text-xs font-black text-gray-500 uppercase tracking-wider text-left w-1/3" dir="ltr">Name (English)</th>
+                        <th class="px-6 py-5 text-xs font-black text-gray-500 uppercase tracking-wider text-center">التبعية</th>
                         <th class="px-6 py-5 text-xs font-black text-gray-500 uppercase tracking-wider text-center w-32">الإجراءات</th>
                     </tr>
                     </thead>
@@ -48,9 +49,21 @@
                                 {{ $type->name['en'] ?? '' }}
                             </td>
 
+                            <td class="px-6 py-5 text-center align-middle">
+                                @if($type->parent_id)
+                                    <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-lg text-xs font-black">
+                                        فرعي من: {{ $type->parent->name['ar'] ?? '' }}
+                                    </span>
+                                @else
+                                    <span class="px-3 py-1 bg-green-50 text-green-600 border border-green-100 rounded-lg text-xs font-black">
+                                        قسم رئيسي
+                                    </span>
+                                @endif
+                            </td>
+
                             <td class="px-6 py-5 align-middle">
                                 <div class="flex items-center justify-center gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                                    <button @click="openEdit({{ $type->id }}, '{{ addslashes($type->name['ar']) }}', '{{ addslashes($type->name['en']) }}')"
+                                    <button @click="openEdit({{ $type->id }}, '{{ addslashes($type->name['ar']) }}', '{{ addslashes($type->name['en']) }}', {{ $type->parent_id ?? 'null' }})"
                                             class="p-2.5 bg-blue-50 text-blue-500 hover:bg-blue-500 hover:text-white rounded-xl transition-colors cursor-pointer" title="تعديل">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                     </button>
@@ -67,7 +80,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-16 text-center">
+                            <td colspan="5" class="px-6 py-16 text-center">
                                 <div class="opacity-40 flex flex-col items-center">
                                     <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                                     <p class="font-black text-gray-500 text-lg">لا توجد تصنيفات حتى الآن</p>
@@ -104,6 +117,17 @@
                                 </template>
 
                                 <div class="space-y-6">
+
+                                    <div class="space-y-2">
+                                        <label class="block text-sm font-black text-gray-700">تبعية القسم (القسم الأب)</label>
+                                        <select name="parent_id" x-model="formData.parent_id" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all font-bold cursor-pointer">
+                                            <option value="">-- قسم رئيسي مستقل --</option>
+                                            @foreach($parentTypes as $parent)
+                                                <option value="{{ $parent->id }}">{{ $parent->name['ar'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
                                     <div class="space-y-2 relative">
                                         <span class="absolute left-4 top-10 text-[10px] font-black text-primary bg-primary/10 px-2 py-1 rounded">AR</span>
                                         <label class="block text-sm font-black text-gray-700">اسم التصنيف (بالعربية) <span class="text-red-500">*</span></label>
@@ -142,21 +166,21 @@
                 isSubmitting: false,
                 formAction: '{{ route("admin.article-types.store") }}',
                 baseUrl: '{{ url("admin/article-types") }}',
-                formData: { ar: '', en: '' },
+                formData: { ar: '', en: '', parent_id: '' },
 
                 openAdd() {
                     this.isEdit = false;
                     this.isSubmitting = false;
                     this.formAction = '{{ route("admin.article-types.store") }}';
-                    this.formData = { ar: '', en: '' };
+                    this.formData = { ar: '', en: '', parent_id: '' };
                     this.isOpen = true;
                 },
 
-                openEdit(id, nameAr, nameEn) {
+                openEdit(id, nameAr, nameEn, parentId) {
                     this.isEdit = true;
                     this.isSubmitting = false;
                     this.formAction = this.baseUrl + '/' + id;
-                    this.formData = { ar: nameAr, en: nameEn };
+                    this.formData = { ar: nameAr, en: nameEn, parent_id: parentId || '' };
                     this.isOpen = true;
                 },
 

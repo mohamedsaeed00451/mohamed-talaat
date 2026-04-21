@@ -11,8 +11,9 @@ class ArticleTypeController extends Controller
 {
     public function index()
     {
-        $types = ArticleType::latest()->paginate(10);
-        return view('admin.article-types.index', compact('types'));
+        $types = ArticleType::with('parent')->latest()->paginate(10);
+        $parentTypes = ArticleType::whereNull('parent_id')->get();
+        return view('admin.article-types.index', compact('types', 'parentTypes'));
     }
 
     public function store(Request $request)
@@ -20,10 +21,12 @@ class ArticleTypeController extends Controller
         $request->validate([
             'name.ar' => 'required|string|max:255',
             'name.en' => 'required|string|max:255',
+            'parent_id' => 'nullable|exists:article_types,id',
         ]);
 
         $slugAr = preg_replace('/\s+/u', '-', trim($request->input('name.ar')));
         $slugEn = Str::slug($request->input('name.en'));
+
         ArticleType::create([
             'name' => [
                 'ar' => $request->input('name.ar'),
@@ -32,10 +35,11 @@ class ArticleTypeController extends Controller
             'slug' => [
                 'ar' => $slugAr,
                 'en' => $slugEn
-            ]
+            ],
+            'parent_id' => $request->input('parent_id'),
         ]);
 
-        return back()->with('success', 'تم إضافة النوع بنجاح!');
+        return back()->with('success', 'تم إضافة التصنيف بنجاح!');
     }
 
     public function update(Request $request, ArticleType $articleType)
@@ -43,10 +47,12 @@ class ArticleTypeController extends Controller
         $request->validate([
             'name.ar' => 'required|string|max:255',
             'name.en' => 'required|string|max:255',
+            'parent_id' => 'nullable|exists:article_types,id|not_in:' . $articleType->id,
         ]);
 
         $slugAr = preg_replace('/\s+/u', '-', trim($request->input('name.ar')));
         $slugEn = Str::slug($request->input('name.en'));
+
         $articleType->update([
             'name' => [
                 'ar' => $request->input('name.ar'),
@@ -55,15 +61,16 @@ class ArticleTypeController extends Controller
             'slug' => [
                 'ar' => $slugAr,
                 'en' => $slugEn
-            ]
+            ],
+            'parent_id' => $request->input('parent_id'),
         ]);
 
-        return back()->with('success', 'تم تعديل النوع بنجاح!');
+        return back()->with('success', 'تم تعديل التصنيف بنجاح!');
     }
 
     public function destroy(ArticleType $articleType)
     {
         $articleType->delete();
-        return back()->with('success', 'تم حذف النوع بنجاح!');
+        return back()->with('success', 'تم حذف التصنيف بنجاح!');
     }
 }

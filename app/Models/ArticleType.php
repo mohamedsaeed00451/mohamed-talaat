@@ -13,4 +13,19 @@ class ArticleType extends Model
         'slug' => 'array',
     ];
 
+    public function parent()
+    {
+        return $this->belongsTo(ArticleType::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(ArticleType::class, 'parent_id');
+    }
+
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
+
 }

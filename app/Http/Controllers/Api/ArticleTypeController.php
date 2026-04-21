@@ -13,7 +13,7 @@ class ArticleTypeController extends Controller
 
     public function index()
     {
-        $types = ArticleType::latest()->get();
+        $types = ArticleType::query()->whereNull('parent_id')->with('children')->latest()->get();
         return $this->responseMessage(200, true, 'Article Types', $types);
     }
 }
