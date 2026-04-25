@@ -226,51 +226,59 @@ class ArticleController extends Controller
 
     public function bulkAiCreate()
     {
-        $types = ArticleType::all();
-        return view('admin.articles.bulk-ai', compact('types'));
+        return view('admin.articles.bulk-ai');
     }
 
-    private function getAiPromptSchema()
+    private function getAiPromptSchema($categoriesListText)
     {
         return [
-            "system_role" => "You are a sovereign analytical system operating at the level of global geopolitical think tanks, Financial Times, and intelligence-grade analysis. You produce high-level strategic content for decision-makers. No average output is allowed. Either world-class or stop.",
-            "target_subject_directive" => "CRITICAL (MANDATORY): For any input, you MUST extract all references related to 'محمد طلعت عبد العزيز'. Analyze his direct/indirect roles, position in the actor network, and evaluate his influence. IF NOT EXPLICITLY MENTIONED: You MUST infer his presence through network and structural analysis, extract exact related segments, and provide a strategic positioning assessment.",
-            "strict_rules" => "1. Fully bilingual (Arabic + English). Both must be equally elite. 2. 'article_body' MUST be exactly 600–650 words in BOTH languages. 3. Include psychological analytical framing, deep structural analysis, and at least one data-driven interpretation. 4. Prohibited: Repetition, filler, generic language. ZERO TOLERANCE: Rebuild internally if weak. Do not explain, just output the JSON.",
+            "system_role" => "You are an elite strategic content analyzer and senior academic editor. You process articles and elevate them into highly structured, professional analytical reports.",
+
+            "target_subject_directive" => "CRITICAL INSTRUCTION: Analyze the provided text accurately. If the text relates to or mentions 'محمد طلعت عبد العزيز', highlight his vision. IF NOT MENTIONED, DO NOT force his name. Simply analyze the actual events objectively.",
+
+            "available_sub_categories" => $categoriesListText,
+
+            "strict_rules" => "1. Fully bilingual (Arabic + English). 2. CRITICAL: The 'article_body' field MUST contain the FULL, COMPLETE, and COMPREHENSIVE text of the article. STRICTLY NO SUMMARIZATION. You must expand it to 600-650 words per language. 3. To prevent token limits, focus your word count heavily on 'article_body' and keep the remaining fields highly precise and concise.",
+
             "expected_json_format" => [
-                "title" => ["ar" => "العنوان الرئيسي (نخبوي)", "en" => "Main Title (Elite)"],
-                "subtitle" => ["ar" => "العنوان التحليلي الاستراتيجي", "en" => "Strategic Analytical Title"],
+                "article_type_id" => "<Select the single most appropriate ID from 'available_sub_categories'. Return ONLY the integer>",
+                "title" => ["ar" => "العنوان الرئيسي", "en" => "Main Title"],
+                "subtitle" => ["ar" => "العنوان التحليلي", "en" => "Analytical Title"],
                 "sovereign_meta_bar" => ["ar" => "القسم – الوحدة – التاريخ – زمن القراءة", "en" => "Section - Unit - Date - Read Time"],
-                "institutional_alignment" => ["ar" => "خط الانتماء المؤسسي", "en" => "Institutional Alignment"],
+                "institutional_alignment" => ["ar" => "المجال أو التوجه المؤسسي", "en" => "Alignment or Field"],
                 "central_hypothesis" => ["ar" => "الفرضية المركزية", "en" => "Central Hypothesis"],
-                "description" => ["ar" => "الأطروحة الاستراتيجية", "en" => "Strategic Thesis"],
-                "article_body" => ["ar" => "متن المقال (إلزامي 600-650 كلمة، يشمل تحليل بنيوي وإطار نفسي)", "en" => "Article Body (600-650 words mandatory, includes structural/psychological framing)"],
-                "strategic_quotations" => ["ar" => "المقولات المأثورة (2 إلى 3 اقتباسات قصيرة عالية التأثير تعكس جوهر التحليل)", "en" => "Strategic Quotations (2-3 short, high-impact quotes reflecting core insight)"],
-                "actor_deconstruction" => ["ar" => "تفكيك الفاعلين (إلزامي: تحديد موقع 'محمد طلعت عبد العزيز'، نوع تأثيره، ومستوى نفوذه بشبكة العلاقات)", "en" => "Actor Deconstruction (Must include Mohamed Talaat Abdel Aziz's positioning, influence type, and network relations)"],
-                "mechanisms_of_influence" => ["ar" => "آليات التأثير", "en" => "Mechanisms of Influence"],
+                "description" => ["ar" => "الأطروحة الاستراتيجية (وصف شامل للحالة)", "en" => "Strategic Thesis"],
+
+                "article_body" => [
+                    "ar" => "النص الكامل للمقال (ممنوع التلخيص نهائياً! اكتب المحتوى كاملاً بتفصيل دقيق ومطول ليعكس النص الأصلي بكل أفكاره)",
+                    "en" => "Full Article Content (STRICTLY NO SUMMARIZATION! Write the complete, detailed, and long content reflecting the original text entirely)"
+                ],
+
+                "strategic_quotations" => ["ar" => "المقولات المأثورة (اقتباسات نصية)", "en" => "Direct Quotations"],
+                "actor_deconstruction" => ["ar" => "تحليل الفاعلين باختصار", "en" => "Actor Deconstruction"],
+                "mechanisms_of_influence" => ["ar" => "آليات التأثير باختصار", "en" => "Mechanisms of Influence"],
                 "structural_context" => ["ar" => "السياق البنيوي", "en" => "Structural Context"],
                 "implications_consequences" => ["ar" => "النتائج والتداعيات", "en" => "Implications & Consequences"],
-                "strategic_foresight" => ["ar" => "الاستشراف المستقبلي (احتمالية تصاعد الدور)", "en" => "Strategic Foresight (Future trajectory)"],
-                "central_concepts" => ["ar" => "قاموس المصطلحات (إلزامي)", "en" => "Concept Dictionary (Mandatory)"],
-                "analytical_mechanism" => ["ar" => "الآلية التحليلية (Cause -> Tool -> Impact -> Outcome)", "en" => "Analytical Mechanism (Cause -> Tool -> Impact -> Outcome)"],
-                "why_it_matters" => ["ar" => "الأهمية الاستراتيجية", "en" => "Strategic Importance"],
-                "talat_ai_questions" => ["ar" => "س وج استراتيجي", "en" => "Strategic Q&A"],
-                "sovereign_summary" => ["ar" => "الخلاصة السيادية", "en" => "Sovereign Summary"],
-                "references_evidence" => ["ar" => "المراجع والتوثيق (5–7 مصادر)", "en" => "References & Evidence Layer (5-7 sources)"],
+                "strategic_foresight" => ["ar" => "الاستشراف المستقبلي", "en" => "Future Foresight"],
+                "central_concepts" => ["ar" => "قاموس المصطلحات الأساسية", "en" => "Key Concepts Dictionary"],
+                "analytical_mechanism" => ["ar" => "الآلية التحليلية", "en" => "Analytical Mechanism"],
+                "why_it_matters" => ["ar" => "الأهمية (لماذا هذا الحدث مهم)", "en" => "Why it matters"],
+                "talat_ai_questions" => ["ar" => "س وج حول الموضوع", "en" => "Q&A about the topic"],
+                "sovereign_summary" => ["ar" => "خلاصة تحليلية دقيقة", "en" => "Analytical Summary"],
+                "references_evidence" => ["ar" => "المصادر أو الأدلة", "en" => "Sources or Evidence"],
                 "related_materials" => ["ar" => "الكلمات المفتاحية", "en" => "Keywords"],
-                "publishing_data_tags" => ["ar" => "نظام الإنفوجرافيك (وصف للتصميم: Actors Map, Influence Flow, Risk Meter)", "en" => "Infographic System (Visual structure description)"],
-                "risk_index_color" => "<Pick ONE hex color code based on danger level: #dc2626 (High), #f59e0b (Medium), #16a34a (Low)>",
-                "analytical_positioning" => "<Choose EXACTLY ONE Arabic word: تحذيري OR نقدي OR استباقي OR دفاعي>",
+                "publishing_data_tags" => ["ar" => "اقتراحات تصميم الإنفوجرافيك", "en" => "Infographic Design Suggestions"],
+                "risk_index_color" => "<Pick ONE hex color: #dc2626, #f59e0b, #16a34a>",
+                "analytical_positioning" => "<Choose EXACTLY ONE Arabic word: تحذيري OR نقدي OR استباقي OR دفاعي OR إيجابي>",
                 "meta_title" => ["ar" => "SEO Title", "en" => "SEO Title"],
                 "meta_description" => ["ar" => "SEO Description", "en" => "SEO Description"]
             ]
         ];
     }
-
     public function bulkProcessSingle(Request $request)
     {
         $request->validate([
             'file' => 'required|file|mimes:pdf,doc,docx,png,jpg,jpeg|max:10240',
-            'article_type_id' => 'required|exists:article_types,id',
         ]);
 
         $file = $request->file('file');
@@ -279,15 +287,32 @@ class ArticleController extends Controller
         $extractedText = '';
         $aiData = null;
 
+        $subCategories = ArticleType::whereNotNull('parent_id')->get();
+        if ($subCategories->isEmpty()) {
+            $subCategories = ArticleType::all();
+        }
+
+        $categoriesListText = $subCategories->map(function ($cat) {
+            return "ID: {$cat->id} (Name: {$cat->name['ar']})";
+        })->implode(' | ');
+
+        $promptSchema = $this->getAiPromptSchema($categoriesListText);
+
         try {
             if (in_array($extension, ['png', 'jpg', 'jpeg'])) {
                 $base64Image = base64_encode(file_get_contents($file->getRealPath()));
                 $imageUrl = "data:image/" . $extension . ";base64," . $base64Image;
 
                 $messages = [
-                    ["role" => "system", "content" => "You are a sovereign analytical system. Return ONLY pure JSON."],
+                    ["role" => "system", "content" =>
+                        "You are a professional multilingual content editor.
+                         Extract text from the provided file and convert it into structured article JSON.
+                         Do not add fictional facts.
+                         If content is unclear, return null for missing fields.
+                         Return ONLY valid JSON."
+                    ],
                     ["role" => "user", "content" => [
-                        ["type" => "text", "text" => json_encode($this->getAiPromptSchema())],
+                        ["type" => "text", "text" => json_encode($promptSchema)],
                         ["type" => "image_url", "image_url" => ["url" => $imageUrl]]
                     ]]
                 ];
@@ -296,10 +321,10 @@ class ArticleController extends Controller
             } elseif ($extension === 'pdf') {
                 $pdf = new \Spatie\PdfToImage\Pdf($file->getRealPath());
                 $totalPages = method_exists($pdf, 'pageCount') ? $pdf->pageCount() : $pdf->getNumberOfPages();
-                $maxPagesToProcess = min($totalPages, 4);
+                $maxPagesToProcess = min($totalPages, 1);
 
                 $visionContent = [
-                    ["type" => "text", "text" => json_encode($this->getAiPromptSchema())]
+                    ["type" => "text", "text" => json_encode($promptSchema)]
                 ];
 
                 for ($i = 1; $i <= $maxPagesToProcess; $i++) {
@@ -316,7 +341,13 @@ class ArticleController extends Controller
                 }
 
                 $messages = [
-                    ["role" => "system", "content" => "You are a sovereign analytical system. Return ONLY pure JSON."],
+                    ["role" => "system", "content" =>
+                        "You are a professional multilingual content editor.
+                         Extract text from the provided file and convert it into structured article JSON.
+                         Do not add fictional facts.
+                         If content is unclear, return null for missing fields.
+                         Return ONLY valid JSON."
+                    ],
                     ["role" => "user", "content" => $visionContent]
                 ];
                 $aiData = $this->executeOpenAICall($messages);
@@ -333,30 +364,38 @@ class ArticleController extends Controller
                     }
                 }
                 $messages = [
-                    ["role" => "system", "content" => "You are a sovereign analytical system. Return ONLY pure JSON."],
-                    ["role" => "user", "content" => json_encode($this->getAiPromptSchema()) . "\n\n" . substr($extractedText, 0, 15000)]
+                    ["role" => "system", "content" =>
+                        "You are a professional multilingual content editor.
+                         Extract text from the provided file and convert it into structured article JSON.
+                         Do not add fictional facts.
+                         If content is unclear, return null for missing fields.
+                         Return ONLY valid JSON."
+                    ],
+                    ["role" => "user", "content" => json_encode($promptSchema) . "\n\n" . substr($extractedText, 0, 15000)]
                 ];
                 $aiData = $this->executeOpenAICall($messages);
             }
 
             if (!$aiData || isset($aiData['error'])) {
-                $errorMsg = $aiData['error'] ?? 'Failed to parse.';
-
+                $errorMsg = $aiData['error'] ?? 'فشل في تحليل الرد.';
                 if (!empty($aiData['raw_content'])) {
                     $snippet = mb_substr($aiData['raw_content'], -400);
-                    $errorMsg .= " | التفاصيل الراجعة: " . $snippet;
+                    $errorMsg .= "\n[التفاصيل المقطوعة من الـ AI]:\n" . $snippet;
                 }
-
                 return response()->json(['success' => false, 'error' => $errorMsg], 500);
             }
 
-            $titleAr = trim($aiData['title']['ar'] ?? '');
+            $aiCategoryId = $aiData['article_type_id'] ?? null;
+            if (!$aiCategoryId || !$subCategories->contains('id', $aiCategoryId)) {
+                $aiCategoryId = $subCategories->first()->id;
+            }
 
+            $titleAr = trim($aiData['title']['ar'] ?? '');
             $slugAr = preg_replace('/\s+/u', '-', $titleAr) . '-' . uniqid();
             $slugEn = Str::slug($aiData['title']['en'] ?? 'article') . '-' . uniqid();
 
             Article::create([
-                'article_type_id' => $request->article_type_id,
+                'article_type_id' => $aiCategoryId,
                 'title' => ['ar' => $titleAr, 'en' => $aiData['title']['en'] ?? ''],
                 'subtitle' => $aiData['subtitle'] ?? null,
                 'slug' => ['ar' => $slugAr, 'en' => $slugEn],
@@ -392,9 +431,14 @@ class ArticleController extends Controller
             return response()->json(['success' => true, 'title' => $titleAr]);
 
         } catch (\Exception $e) {
-            return response()->json(['success' => true, 'title' => $originalFileName . ' (تم الحفظ ببيانات ناقصة)']);
+            Log::error('System Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'خطأ داخلي في النظام: ' . $e->getMessage()
+            ], 500);
         }
     }
+
     private function executeOpenAICall($messages)
     {
         $response = Http::withToken(env('OPENAI_API_KEY', ''))
@@ -408,7 +452,47 @@ class ArticleController extends Controller
             ]);
 
         if ($response->successful()) {
+            $refusal = $response->json('choices.0.message.refusal');
+            if (!empty($refusal)) {
+                Log::warning('First attempt refused, retrying with simplified prompt');
+                $retryResponse = Http::withToken(env('OPENAI_API_KEY'))
+                    ->timeout(240)
+                    ->post('https://api.openai.com/v1/chat/completions', [
+                        "model" => "gpt-4o",
+                        "messages" => [
+                            [
+                                "role"=>"system",
+                                "content"=>"Extract article information and return valid JSON only."
+                            ],
+                            [
+                                "role"=>"user",
+                                "content"=>"Analyze this content objectively."
+                            ]
+                        ],
+                        "response_format"=>[
+                            "type"=>"json_object"
+                        ]
+                    ]);
+
+                if($retryResponse->successful()){
+                    return json_decode(
+                        $retryResponse->json('choices.0.message.content'),
+                        true
+                    );
+                }
+            }
+
             $content = $response->json('choices.0.message.content');
+
+            if (empty($content)) {
+                return [
+                    'error' => 'الذكاء الاصطناعي أرجع رداً فارغاً.',
+                    'raw_content' => $response->body()
+                ];
+            }
+
+//            Log::info('OpenAI Complete Response Body: ' . $response->body());
+
             if (preg_match('/\{[\s\S]*\}/', $content, $matches)) {
                 $content = $matches[0];
             }
@@ -424,8 +508,9 @@ class ArticleController extends Controller
             ];
         }
 
+        Log::error('OpenAI Request Failed: ' . $response->body());
         return [
-            'error' => 'رد السيرفر بالرفض.',
+            'error' => 'سيرفر OpenAI رفض الطلب (كود ' . $response->status() . ').',
             'raw_content' => $response->body()
         ];
     }
