@@ -7,16 +7,16 @@
             <a href="{{ route('admin.articles.index') }}" class="p-2.5 bg-white text-gray-500 hover:text-primary rounded-xl shadow-sm border border-gray-100 transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
             </a>
-            <h1 class="text-2xl font-black text-gray-900">إضافة تحليل جديد</h1>
+            <h1 class="text-2xl font-black text-gray-900">إضافة تحليل استراتيجي جديد</h1>
         </div>
 
         <form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-[2rem] shadow-sm border border-gray-50 p-8 md:p-10 space-y-8" x-data="{ isSubmitting: false }" @submit="isSubmitting = true">
             @csrf
 
             <div class="space-y-6">
-                <h3 class="text-lg font-black text-primary border-b border-gray-100 pb-2">البيانات الأساسية</h3>
+                <h3 class="text-lg font-black text-primary border-b border-gray-100 pb-2">1. التموضع والمؤشرات الاستراتيجية</h3>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="space-y-2 relative">
                         <label class="block text-sm font-black text-gray-700">التصنيف الأساسي <span class="text-red-500">*</span></label>
                         <select name="article_type_id" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all font-black text-sm">
@@ -28,143 +28,207 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label class="block text-sm font-black text-gray-700">صورة المقال (اختياري)</label>
+                        <label class="block text-sm font-black text-gray-700">مؤشر الخطورة والأهمية (لون)</label>
+                        <input type="color" name="risk_index_color" value="#dc2626" class="w-full h-[52px] px-2 py-1 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:border-primary/50 transition-all cursor-pointer">
+                    </div>
+
+                    <div class="space-y-2 relative">
+                        <label class="block text-sm font-black text-gray-700">زاوية التموضع التحليلي</label>
+                        <select name="analytical_positioning" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all font-black text-sm">
+                            <option value="تحذيري">تحذيري</option>
+                            <option value="نقدي">نقدي</option>
+                            <option value="استباقي">استباقي</option>
+                            <option value="دفاعي">دفاعي</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2 col-span-1 md:col-span-2 mb-4">
+                        <label class="block text-sm font-black text-gray-700">صورة المقال الرئيسية</label>
                         <input type="file" name="image" accept="image/*" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-primary/50 transition-all font-bold text-gray-600 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-gray-900 file:text-white cursor-pointer">
                     </div>
 
                     <div class="space-y-2">
-                        <label class="block text-sm font-black text-gray-700">العنوان الأساسي بالعربية <span class="text-red-500">*</span></label>
-                        <input type="text" name="title[ar]" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold">
+                        <label class="block text-sm font-black text-gray-700">العنوان الرئيسي بالعربية <span class="text-red-500">*</span></label>
+                        <input type="text" name="title[ar]" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold text-lg">
                     </div>
                     <div class="space-y-2" dir="ltr">
                         <label class="block text-sm font-black text-gray-700 text-right">Main Title (English) <span class="text-red-500">*</span></label>
-                        <input type="text" name="title[en]" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold text-left">
+                        <input type="text" name="title[en]" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold text-left text-lg">
                     </div>
 
                     <div class="space-y-2">
-                        <label class="block text-sm font-black text-gray-700">العنوان الفرعي بالعربية</label>
+                        <label class="block text-sm font-black text-gray-700">العنوان التحليلي الاحترافي بالعربية</label>
                         <input type="text" name="subtitle[ar]" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold">
                     </div>
                     <div class="space-y-2" dir="ltr">
-                        <label class="block text-sm font-black text-gray-700 text-right">Subtitle (English)</label>
+                        <label class="block text-sm font-black text-gray-700 text-right">Strategic Analytical Title (English)</label>
                         <input type="text" name="subtitle[en]" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold text-left">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-black text-gray-700">شريط البيانات السيادي بالعربية</label>
+                        <input type="text" name="sovereign_meta_bar[ar]" placeholder="القسم – الوحدة – التاريخ – زمن القراءة" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold">
+                    </div>
+                    <div class="space-y-2" dir="ltr">
+                        <label class="block text-sm font-black text-gray-700 text-right">Sovereign Meta Bar (English)</label>
+                        <input type="text" name="sovereign_meta_bar[en]" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold text-left">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-black text-gray-700">خط الانتماء المؤسسي بالعربية</label>
+                        <input type="text" name="institutional_alignment[ar]" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold">
+                    </div>
+                    <div class="space-y-2" dir="ltr">
+                        <label class="block text-sm font-black text-gray-700 text-right">Institutional Alignment Line (English)</label>
+                        <input type="text" name="institutional_alignment[en]" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold text-left">
                     </div>
                 </div>
             </div>
 
             <div class="space-y-6 pt-6 mt-6 border-t border-gray-100">
-                <h3 class="text-lg font-black text-primary border-b border-gray-100 pb-2">محتوى المقال والتحليل</h3>
+                <h3 class="text-lg font-black text-primary border-b border-gray-100 pb-2">2. بناء التحليل والأطروحة</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="block text-sm font-black text-gray-700">الأطروحة المركزية (الوصف) بالعربية <span class="text-red-500">*</span></label>
-                        <textarea name="description[ar]" rows="4" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
+                        <label class="block text-sm font-black text-gray-700">الفرضية المركزية بالعربية</label>
+                        <textarea name="central_hypothesis[ar]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
                     </div>
                     <div class="space-y-2" dir="ltr">
-                        <label class="block text-sm font-black text-gray-700 text-right">Central Thesis (English) <span class="text-red-500">*</span></label>
-                        <textarea name="description[en]" rows="4" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
+                        <label class="block text-sm font-black text-gray-700 text-right">Central Hypothesis (English)</label>
+                        <textarea name="central_hypothesis[en]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-black text-gray-700">الأطروحة الاستراتيجية بالعربية <span class="text-red-500">*</span></label>
+                        <textarea name="description[ar]" rows="6" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
+                    </div>
+                    <div class="space-y-2" dir="ltr">
+                        <label class="block text-sm font-black text-gray-700 text-right">Strategic Thesis (English) <span class="text-red-500">*</span></label>
+                        <textarea name="description[en]" rows="6" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
                     </div>
                 </div>
+
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-black text-red-600 bg-red-50 p-2 rounded-lg w-fit mb-2">متن المقال بالعربية (إلزامي 600 - 650 كلمة)</label>
+                        <textarea name="article_body[ar]" rows="12" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-lg leading-relaxed"></textarea>
+                    </div>
+                    <div class="space-y-2" dir="ltr">
+                        <label class="block text-sm font-black text-red-600 bg-red-50 p-2 rounded-lg w-fit ml-auto mb-2 text-right">Article Body (English) (Mandatory 600-650 words)</label>
+                        <textarea name="article_body[en]" rows="12" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-lg leading-relaxed text-left"></textarea>
+                    </div>
+                </div>
+
+                <div class="space-y-2 mt-4">
+                    <label class="block text-sm font-black text-gray-700">المقولات المأثورة بالعربية (2-3 اقتباسات)</label>
+                    <textarea name="strategic_quotations[ar]" rows="4" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl font-bold resize-y text-lg"></textarea>
+                </div>
+                <div class="space-y-2 mt-4" dir="ltr">
+                    <label class="block text-sm font-black text-gray-700 text-right">Strategic Quotations (English)</label>
+                    <textarea name="strategic_quotations[en]" rows="4" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl font-bold resize-y text-lg text-left"></textarea>
+                </div>
+            </div>
+
+
+            <div class="space-y-6 pt-6 mt-6 border-t border-gray-100">
+                <h3 class="text-lg font-black text-primary border-b border-gray-100 pb-2">3. التفكيك والبنية الاستراتيجية</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="block text-sm font-black text-gray-700">متن المقال بالعربية</label>
-                        <textarea name="article_body[ar]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
+                        <label class="block text-sm font-black text-gray-700">تفكيك الفاعلين بالعربية</label>
+                        <textarea name="actor_deconstruction[ar]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
                     </div>
                     <div class="space-y-2" dir="ltr">
-                        <label class="block text-sm font-black text-gray-700 text-right">Article Body (English)</label>
-                        <textarea name="article_body[en]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
+                        <label class="block text-sm font-black text-gray-700 text-right">Actor Deconstruction (English)</label>
+                        <textarea name="actor_deconstruction[en]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-black text-gray-700">آليات التأثير بالعربية</label>
+                        <textarea name="mechanisms_of_influence[ar]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
+                    </div>
+                    <div class="space-y-2" dir="ltr">
+                        <label class="block text-sm font-black text-gray-700 text-right">Mechanisms of Influence (English)</label>
+                        <textarea name="mechanisms_of_influence[en]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-black text-gray-700">السياق البنيوي بالعربية</label>
+                        <textarea name="structural_context[ar]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
+                    </div>
+                    <div class="space-y-2" dir="ltr">
+                        <label class="block text-sm font-black text-gray-700 text-right">Structural Context (English)</label>
+                        <textarea name="structural_context[en]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-black text-gray-700">النتائج والتداعيات بالعربية</label>
+                        <textarea name="implications_consequences[ar]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
+                    </div>
+                    <div class="space-y-2" dir="ltr">
+                        <label class="block text-sm font-black text-gray-700 text-right">Implications & Consequences (English)</label>
+                        <textarea name="implications_consequences[en]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-black text-gray-700">الاستشراف المستقبلي بالعربية</label>
+                        <textarea name="strategic_foresight[ar]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
+                    </div>
+                    <div class="space-y-2" dir="ltr">
+                        <label class="block text-sm font-black text-gray-700 text-right">Strategic Foresight (English)</label>
+                        <textarea name="strategic_foresight[en]" rows="6" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
                     </div>
                 </div>
+            </div>
+
+            <div class="space-y-6 pt-6 mt-6 border-t border-gray-100">
+                <h3 class="text-lg font-black text-primary border-b border-gray-100 pb-2">4. المرجعيات والمفاهيم</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="block text-sm font-black text-gray-700">المفاهيم المركزية بالعربية</label>
-                        <textarea name="central_concepts[ar]" rows="4" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
+                        <label class="block text-sm font-black text-red-600 bg-red-50 p-2 rounded-lg w-fit mb-2">قاموس المصطلحات بالعربية (إلزامي)</label>
+                        <textarea name="central_concepts[ar]" rows="8" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
                     </div>
                     <div class="space-y-2" dir="ltr">
-                        <label class="block text-sm font-black text-gray-700 text-right">Central Concepts (English)</label>
-                        <textarea name="central_concepts[en]" rows="4" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
+                        <label class="block text-sm font-black text-red-600 bg-red-50 p-2 rounded-lg w-fit ml-auto mb-2 text-right">Concept Dictionary (English) (Mandatory)</label>
+                        <textarea name="central_concepts[en]" rows="8" required class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
                     </div>
-                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label class="block text-sm font-black text-gray-700">الآلية التحليلية بالعربية</label>
-                        <textarea name="analytical_mechanism[ar]" rows="4" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
+                        <textarea name="analytical_mechanism[ar]" rows="8" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
                     </div>
                     <div class="space-y-2" dir="ltr">
                         <label class="block text-sm font-black text-gray-700 text-right">Analytical Mechanism (English)</label>
-                        <textarea name="analytical_mechanism[en]" rows="4" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-black text-gray-700">لماذا يهم هذا المقال بالعربية</label>
-                        <textarea name="why_it_matters[ar]" rows="4" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
-                    </div>
-                    <div class="space-y-2" dir="ltr">
-                        <label class="block text-sm font-black text-gray-700 text-right">Why It Matters (English)</label>
-                        <textarea name="why_it_matters[en]" rows="4" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-black text-gray-700">🤖 أسئلة Talat AI عن هذا المقال (عربي)</label>
-                        <textarea name="talat_ai_questions[ar]" rows="4" placeholder="مثال:&#10;• ما الفرق بين الحوار السيادي والحوار المفتوح؟&#10;• هل كان الحوار في 2011 ممكنًا فعليًا؟" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
-                    </div>
-                    <div class="space-y-2" dir="ltr">
-                        <label class="block text-sm font-black text-gray-700 text-right">🤖 Talat AI Questions (English)</label>
-                        <textarea name="talat_ai_questions[en]" rows="4" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-black text-gray-700">الخلاصة السيادية بالعربية</label>
-                        <textarea name="sovereign_summary[ar]" rows="4" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
-                    </div>
-                    <div class="space-y-2" dir="ltr">
-                        <label class="block text-sm font-black text-gray-700 text-right">Sovereign Summary (English)</label>
-                        <textarea name="sovereign_summary[en]" rows="4" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-black text-gray-700">مواد مرتبطة (Keywords) بالعربية</label>
-                        <textarea name="related_materials[ar]" rows="3" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
-                    </div>
-                    <div class="space-y-2" dir="ltr">
-                        <label class="block text-sm font-black text-gray-700 text-right">Related Materials (Keywords) (English)</label>
-                        <textarea name="related_materials[en]" rows="3" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
+                        <textarea name="analytical_mechanism[en]" rows="8" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
                     </div>
 
                     <div class="space-y-2">
-                        <label class="block text-sm font-black text-gray-700">بيانات النشر والوسوم بالعربية</label>
-                        <textarea name="publishing_data_tags[ar]" rows="3" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y"></textarea>
+                        <label class="block text-sm font-black text-gray-700">المراجع والتوثيق بالعربية</label>
+                        <textarea name="references_evidence[ar]" rows="8" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left" dir="ltr"></textarea>
                     </div>
                     <div class="space-y-2" dir="ltr">
-                        <label class="block text-sm font-black text-gray-700 text-right">Publishing Data & Tags (English)</label>
-                        <textarea name="publishing_data_tags[en]" rows="3" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
+                        <label class="block text-sm font-black text-gray-700 text-right">References & Evidence (English)</label>
+                        <textarea name="references_evidence[en]" rows="8" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 font-bold resize-y text-left"></textarea>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-6 pt-6 mt-6 border-t border-gray-100">
-                <h3 class="text-lg font-black text-primary border-b border-gray-100 pb-2">ملفات الإنفوجرافيك (اختياري)</h3>
+                <h3 class="text-lg font-black text-primary border-b border-gray-100 pb-2">5. النظام البصري وملفات الإنفوجرافيك</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <label class="block text-sm font-black text-gray-800 mb-2">📊 انفوجرافيك ديزاين (Infographic Design)</label>
-                        <input type="file" name="infographic_design_file" accept=".pdf,.doc,.docx" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
+                        <label class="block text-sm font-black text-gray-800 mb-2">📊 انفوجرافيك ديزاين (ثابت)</label>
+                        <input type="file" name="infographic_design_file" accept=".png,.jpg,.jpeg,.svg,.webp" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
+                        <p class="text-[10px] text-gray-400 mt-1 font-bold">مسموح بـ: PNG, JPG, SVG, WEBP</p>
                     </div>
-
                     <div class="space-y-2 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <label class="block text-sm font-black text-gray-800 mb-2">🖱️ انفوجرافيك تفاعلي (Interactive Infographic)</label>
-                        <input type="file" name="interactive_infographic_file" accept=".pdf,.doc,.docx" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
+                        <label class="block text-sm font-black text-gray-800 mb-2">🖱️ انفوجرافيك تفاعلي (متحرك)</label>
+                        <input type="file" name="interactive_infographic_file" accept=".json,.svg,.zip,.html,.mp4,.webm,.gif" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-primary file:text-white cursor-pointer">
+                        <p class="text-[10px] text-gray-400 mt-1 font-bold">مسموح بـ: JSON (Lottie), SVG, ZIP, HTML, MP4, GIF</p>
                     </div>
                 </div>
             </div>
@@ -313,11 +377,12 @@
             </div>
 
             <div class="pt-6 border-t border-gray-50 flex justify-end">
-                <button type="submit" :disabled="isSubmitting" class="flex items-center justify-center gap-2 px-10 py-4 bg-primary text-white rounded-xl font-black shadow-lg shadow-primary/30 transition-all disabled:opacity-70">
-                    <span x-show="!isSubmitting">حفظ المقال</span>
-                    <span x-show="isSubmitting" style="display:none;">جاري الحفظ والرفع...</span>
+                <button type="submit" :disabled="isSubmitting" class="flex items-center justify-center gap-2 px-12 py-4 bg-primary text-white rounded-2xl font-black text-lg shadow-lg shadow-primary/30 transition-all disabled:opacity-70">
+                    <span x-show="!isSubmitting">حفظ ونشر المقال</span>
+                    <span x-show="isSubmitting" style="display:none;">جاري المعالجة...</span>
                 </button>
             </div>
+
         </form>
     </div>
 @endsection

@@ -31,6 +31,17 @@ class Article extends Model
         'social_published' => 'boolean',
         'published_at' => 'datetime',
         'social_platforms' => 'array',
+
+        'sovereign_meta_bar' => 'array',
+        'institutional_alignment' => 'array',
+        'central_hypothesis' => 'array',
+        'actor_deconstruction' => 'array',
+        'mechanisms_of_influence' => 'array',
+        'structural_context' => 'array',
+        'implications_consequences' => 'array',
+        'strategic_foresight' => 'array',
+        'references_evidence' => 'array',
+        'strategic_quotations' => 'array',
     ];
 
     public function type()
