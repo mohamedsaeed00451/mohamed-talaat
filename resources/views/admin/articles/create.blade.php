@@ -131,7 +131,6 @@
                 </div>
             </div>
 
-
             <div class="space-y-6 pt-6 mt-6 border-t border-gray-100">
                 <h3 class="text-lg font-black text-primary border-b border-gray-100 pb-2">3. التفكيك والبنية الاستراتيجية</h3>
 

@@ -340,7 +340,14 @@ class ArticleController extends Controller
             }
 
             if (!$aiData || isset($aiData['error'])) {
-                return response()->json(['success' => false, 'error' => $aiData['error'] ?? 'Failed to parse.'], 500);
+                $errorMsg = $aiData['error'] ?? 'Failed to parse.';
+
+                if (!empty($aiData['raw_content'])) {
+                    $snippet = mb_substr($aiData['raw_content'], -400);
+                    $errorMsg .= " | التفاصيل الراجعة: " . $snippet;
+                }
+
+                return response()->json(['success' => false, 'error' => $errorMsg], 500);
             }
 
             $titleAr = trim($aiData['title']['ar'] ?? '');
@@ -409,9 +416,17 @@ class ArticleController extends Controller
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $decoded;
             }
+
             Log::error('AI Output Truncated: ' . $content);
-            return ['error' => 'الذكاء الاصطناعي أنتج نصاً طويلاً وانقطع.'];
+            return [
+                'error' => 'الـ JSON مقطوع.',
+                'raw_content' => $content
+            ];
         }
-        return ['error' => 'خطأ في الاتصال.'];
+
+        return [
+            'error' => 'رد السيرفر بالرفض.',
+            'raw_content' => $response->body()
+        ];
     }
 }

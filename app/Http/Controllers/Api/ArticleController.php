@@ -82,6 +82,7 @@ class ArticleController extends Controller
             'central_hypothesis' => $article->central_hypothesis,
             'description' => $article->description,
             'article_body' => $article->article_body,
+            'strategic_quotations' => $article->strategic_quotations,
 
             'actor_deconstruction' => $article->actor_deconstruction,
             'mechanisms_of_influence' => $article->mechanisms_of_influence,
